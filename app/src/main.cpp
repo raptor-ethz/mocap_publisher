@@ -651,31 +651,7 @@ int main(int argc, char *argv[]) {
                        << ", "
                        << _Output_GetSegmentStaticRotationEulerXYZ.Rotation[2]
                        << ")" << std::endl;
-          // publish euler Rotation to DDS
-          if (SubjectName.compare("srl_quad") == 0) {
-            _Output_GetSegmentStaticRotationEulerXYZ.Rotation[0] =
-                quad_msg.pose.orientation_euler.roll;
-            _Output_GetSegmentStaticRotationEulerXYZ.Rotation[1] =
-                quad_msg.pose.orientation_euler.pitch;
-            _Output_GetSegmentStaticRotationEulerXYZ.Rotation[2] =
-                quad_msg.pose.orientation_euler.yaw;
-          }
-          if (SubjectName.compare("srl_box") == 0) {
-            _Output_GetSegmentStaticRotationEulerXYZ.Rotation[0] =
-                box_msg.pose.orientation_euler.roll;
-            _Output_GetSegmentStaticRotationEulerXYZ.Rotation[1] =
-                box_msg.pose.orientation_euler.pitch;
-            _Output_GetSegmentStaticRotationEulerXYZ.Rotation[2] =
-                box_msg.pose.orientation_euler.yaw;
-          }
-          if (SubjectName.compare("srl_stand") == 0) {
-            _Output_GetSegmentStaticRotationEulerXYZ.Rotation[0] =
-                stand_msg.pose.orientation_euler.roll;
-            _Output_GetSegmentStaticRotationEulerXYZ.Rotation[1] =
-                stand_msg.pose.orientation_euler.pitch;
-            _Output_GetSegmentStaticRotationEulerXYZ.Rotation[2] =
-                stand_msg.pose.orientation_euler.yaw;
-          }
+
           // Get the global segment translation
           Output_GetSegmentGlobalTranslation
               _Output_GetSegmentGlobalTranslation =
@@ -825,7 +801,40 @@ int main(int argc, char *argv[]) {
                        << Adapt(
                               _Output_GetSegmentGlobalRotationEulerXYZ.Occluded)
                        << std::endl;
-
+          // publish euler Rotation to DDS in degrees
+          if (SubjectName.compare("srl_quad") == 0) {
+            quad_msg.pose.orientation_euler.roll =
+                _Output_GetSegmentGlobalRotationEulerXYZ.Rotation[0] *
+                (180.0 / M_PI);
+            quad_msg.pose.orientation_euler.pitch =
+                _Output_GetSegmentGlobalRotationEulerXYZ.Rotation[1] *
+                (180.0 / M_PI);
+            quad_msg.pose.orientation_euler.yaw =
+                _Output_GetSegmentGlobalRotationEulerXYZ.Rotation[2] *
+                (180.0 / M_PI);
+          }
+          if (SubjectName.compare("srl_box") == 0) {
+            box_msg.pose.orientation_euler.roll =
+                _Output_GetSegmentGlobalRotationEulerXYZ.Rotation[0] *
+                (180.0 / M_PI);
+            box_msg.pose.orientation_euler.pitch =
+                _Output_GetSegmentGlobalRotationEulerXYZ.Rotation[1] *
+                (180.0 / M_PI);
+            box_msg.pose.orientation_euler.yaw =
+                _Output_GetSegmentGlobalRotationEulerXYZ.Rotation[2] *
+                (180.0 / M_PI);
+          }
+          if (SubjectName.compare("srl_stand") == 0) {
+            stand_msg.pose.orientation_euler.roll =
+                _Output_GetSegmentGlobalRotationEulerXYZ.Rotation[0] *
+                (180.0 / M_PI);
+            stand_msg.pose.orientation_euler.pitch =
+                _Output_GetSegmentGlobalRotationEulerXYZ.Rotation[1] *
+                (180.0 / M_PI);
+            stand_msg.pose.orientation_euler.yaw =
+                _Output_GetSegmentGlobalRotationEulerXYZ.Rotation[2] *
+                (180.0 / M_PI);
+          }
           // Get the local segment translation
           Output_GetSegmentLocalTranslation _Output_GetSegmentLocalTranslation =
               MyClient.GetSegmentLocalTranslation(SubjectName, SegmentName);
