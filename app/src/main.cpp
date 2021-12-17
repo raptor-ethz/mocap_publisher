@@ -258,6 +258,11 @@ int main(int argc, char *argv[]) {
   stand_pub.init();
   cpp_msg::Mocap stand_msg;
 
+  DDSPublisher drop_pub = DDSPublisher(idl_msg::MocapPubSubType(),
+                                       "mocap_srl_drop", dp.participant());
+  drop_pub.init();
+  cpp_msg::Mocap drop_msg;
+
   //////////////////////////////////////////////////////////
 
   // Program options
@@ -436,6 +441,7 @@ int main(int argc, char *argv[]) {
       quad_msg.header.timestamp = _Output_GetFrameNumber.FrameNumber;
       box_msg.header.timestamp = _Output_GetFrameNumber.FrameNumber;
       stand_msg.header.timestamp = _Output_GetFrameNumber.FrameNumber;
+      drop_msg.header.timestamp = _Output_GetFrameNumber.FrameNumber;
       ////////////////////////////////////////////////////////
       Output_GetFrameRate Rate = MyClient.GetFrameRate();
       OutputStream << "Frame rate: " << Rate.FrameRateHz << std::endl;
@@ -478,6 +484,7 @@ int main(int argc, char *argv[]) {
       quad_msg.latency = MyClient.GetLatencyTotal().Total;
       box_msg.latency = MyClient.GetLatencyTotal().Total;
       stand_msg.latency = MyClient.GetLatencyTotal().Total;
+      drop_msg.latency = MyClient.GetLatencyTotal().Total;
 
       for (unsigned int LatencySampleIndex = 0;
            LatencySampleIndex < MyClient.GetLatencySampleCount().Count;
@@ -527,6 +534,9 @@ int main(int argc, char *argv[]) {
         }
         if (SubjectName.compare("srl_stand") == 0) {
           stand_msg.header.id = SubjectName;
+        }
+        if (SubjectName.compare("srl_drop") == 0) {
+          drop_msg.header.id = SubjectName;
         }
 
         ////////////////////////////////////////////
@@ -716,6 +726,17 @@ int main(int argc, char *argv[]) {
             stand_msg.pose.position.z =
                 _Output_GetSegmentGlobalTranslation.Translation[2] / 1000.0;
           }
+          if (SubjectName.compare("srl_drop") == 0) {
+            drop_msg.pose.position.x =
+                (_Output_GetSegmentGlobalTranslation.Translation[0] / 1000.0) -
+                x_offset;
+            drop_msg.pose.position.y =
+                ((_Output_GetSegmentGlobalTranslation.Translation[1] / 1000.0) +
+                 y_offset) *
+                (-1.0);
+            drop_msg.pose.position.z =
+                _Output_GetSegmentGlobalTranslation.Translation[2] / 1000.0;
+          }
 
           ////////////////////////////////////////////
 
@@ -835,6 +856,17 @@ int main(int argc, char *argv[]) {
                 _Output_GetSegmentGlobalRotationEulerXYZ.Rotation[2] *
                 (180.0 / M_PI);
           }
+          if (SubjectName.compare("srl_drop") == 0) {
+            drop_msg.pose.orientation_euler.roll =
+                _Output_GetSegmentGlobalRotationEulerXYZ.Rotation[0] *
+                (180.0 / M_PI);
+            drop_msg.pose.orientation_euler.pitch =
+                _Output_GetSegmentGlobalRotationEulerXYZ.Rotation[1] *
+                (180.0 / M_PI);
+            drop_msg.pose.orientation_euler.yaw =
+                _Output_GetSegmentGlobalRotationEulerXYZ.Rotation[2] *
+                (180.0 / M_PI);
+          }
           // Get the local segment translation
           Output_GetSegmentLocalTranslation _Output_GetSegmentLocalTranslation =
               MyClient.GetSegmentLocalTranslation(SubjectName, SegmentName);
@@ -936,6 +968,7 @@ int main(int argc, char *argv[]) {
         quad_pub.publish(quad_msg);
         box_pub.publish(box_msg);
         stand_pub.publish(stand_msg);
+        drop_pub.publish(drop_msg);
         ////////////////////////////////////
       }
     }
