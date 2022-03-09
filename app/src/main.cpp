@@ -29,155 +29,161 @@
 #include "set_parameters.h"
 
 #ifdef WIN32
-#include <conio.h>    // For _kbhit()
-#include <windows.h>  // For Sleep()
+#include <conio.h>   // For _kbhit()
+#include <windows.h> // For Sleep()
 
-#include <cstdio>  // For getchar()
+#include <cstdio> // For getchar()
 #else
-#include <unistd.h>  // For sleep()
-#endif               // WIN32
+#include <unistd.h> // For sleep()
+#endif              // WIN32
 
 #include <string.h>
 #include <time.h>
 
 using namespace ViconDataStreamSDK::CPP;
 
-namespace {
+namespace
+{
 std::string Adapt(const bool i_Value) { return i_Value ? "True" : "False"; }
 
 // Set time standard
-std::string Adapt(const TimecodeStandard::Enum i_Standard) {
+std::string Adapt(const TimecodeStandard::Enum i_Standard)
+{
   switch (i_Standard) {
-    default:
-    case TimecodeStandard::None:
-      return "0";
-    case TimecodeStandard::PAL:
-      return "1";
-    case TimecodeStandard::NTSC:
-      return "2";
-    case TimecodeStandard::NTSCDrop:
-      return "3";
-    case TimecodeStandard::Film:
-      return "4";
-    case TimecodeStandard::NTSCFilm:
-      return "5";
-    case TimecodeStandard::ATSC:
-      return "6";
+  default:
+  case TimecodeStandard::None:
+    return "0";
+  case TimecodeStandard::PAL:
+    return "1";
+  case TimecodeStandard::NTSC:
+    return "2";
+  case TimecodeStandard::NTSCDrop:
+    return "3";
+  case TimecodeStandard::Film:
+    return "4";
+  case TimecodeStandard::NTSCFilm:
+    return "5";
+  case TimecodeStandard::ATSC:
+    return "6";
   }
 }
 
 // Doubt - Set the direction for i axis
-std::string Adapt(const Direction::Enum i_Direction) {
+std::string Adapt(const Direction::Enum i_Direction)
+{
   switch (i_Direction) {
-    case Direction::Forward:
-      return "Forward";
-    case Direction::Backward:
-      return "Backward";
-    case Direction::Left:
-      return "Left";
-    case Direction::Right:
-      return "Right";
-    case Direction::Up:
-      return "Up";
-    case Direction::Down:
-      return "Down";
-    default:
-      return "Unknown";
+  case Direction::Forward:
+    return "Forward";
+  case Direction::Backward:
+    return "Backward";
+  case Direction::Left:
+    return "Left";
+  case Direction::Right:
+    return "Right";
+  case Direction::Up:
+    return "Up";
+  case Direction::Down:
+    return "Down";
+  default:
+    return "Unknown";
   }
 }
 
 // Enable forceplate input device (not relevant)
-std::string Adapt(const DeviceType::Enum i_DeviceType) {
+std::string Adapt(const DeviceType::Enum i_DeviceType)
+{
   switch (i_DeviceType) {
-    case DeviceType::ForcePlate:
-      return "ForcePlate";
-    case DeviceType::Unknown:
-    default:
-      return "Unknown";
+  case DeviceType::ForcePlate:
+    return "ForcePlate";
+  case DeviceType::Unknown:
+  default:
+    return "Unknown";
   }
 }
 
 // Set the unit for state variable
-std::string Adapt(const Unit::Enum i_Unit) {
+std::string Adapt(const Unit::Enum i_Unit)
+{
   switch (i_Unit) {
-    case Unit::Meter:
-      return "Meter";
-    case Unit::Volt:
-      return "Volt";
-    case Unit::NewtonMeter:
-      return "NewtonMeter";
-    case Unit::Newton:
-      return "Newton";
-    case Unit::Kilogram:
-      return "Kilogram";
-    case Unit::Second:
-      return "Second";
-    case Unit::Ampere:
-      return "Ampere";
-    case Unit::Kelvin:
-      return "Kelvin";
-    case Unit::Mole:
-      return "Mole";
-    case Unit::Candela:
-      return "Candela";
-    case Unit::Radian:
-      return "Radian";
-    case Unit::Steradian:
-      return "Steradian";
-    case Unit::MeterSquared:
-      return "MeterSquared";
-    case Unit::MeterCubed:
-      return "MeterCubed";
-    case Unit::MeterPerSecond:
-      return "MeterPerSecond";
-    case Unit::MeterPerSecondSquared:
-      return "MeterPerSecondSquared";
-    case Unit::RadianPerSecond:
-      return "RadianPerSecond";
-    case Unit::RadianPerSecondSquared:
-      return "RadianPerSecondSquared";
-    case Unit::Hertz:
-      return "Hertz";
-    case Unit::Joule:
-      return "Joule";
-    case Unit::Watt:
-      return "Watt";
-    case Unit::Pascal:
-      return "Pascal";
-    case Unit::Lumen:
-      return "Lumen";
-    case Unit::Lux:
-      return "Lux";
-    case Unit::Coulomb:
-      return "Coulomb";
-    case Unit::Ohm:
-      return "Ohm";
-    case Unit::Farad:
-      return "Farad";
-    case Unit::Weber:
-      return "Weber";
-    case Unit::Tesla:
-      return "Tesla";
-    case Unit::Henry:
-      return "Henry";
-    case Unit::Siemens:
-      return "Siemens";
-    case Unit::Becquerel:
-      return "Becquerel";
-    case Unit::Gray:
-      return "Gray";
-    case Unit::Sievert:
-      return "Sievert";
-    case Unit::Katal:
-      return "Katal";
+  case Unit::Meter:
+    return "Meter";
+  case Unit::Volt:
+    return "Volt";
+  case Unit::NewtonMeter:
+    return "NewtonMeter";
+  case Unit::Newton:
+    return "Newton";
+  case Unit::Kilogram:
+    return "Kilogram";
+  case Unit::Second:
+    return "Second";
+  case Unit::Ampere:
+    return "Ampere";
+  case Unit::Kelvin:
+    return "Kelvin";
+  case Unit::Mole:
+    return "Mole";
+  case Unit::Candela:
+    return "Candela";
+  case Unit::Radian:
+    return "Radian";
+  case Unit::Steradian:
+    return "Steradian";
+  case Unit::MeterSquared:
+    return "MeterSquared";
+  case Unit::MeterCubed:
+    return "MeterCubed";
+  case Unit::MeterPerSecond:
+    return "MeterPerSecond";
+  case Unit::MeterPerSecondSquared:
+    return "MeterPerSecondSquared";
+  case Unit::RadianPerSecond:
+    return "RadianPerSecond";
+  case Unit::RadianPerSecondSquared:
+    return "RadianPerSecondSquared";
+  case Unit::Hertz:
+    return "Hertz";
+  case Unit::Joule:
+    return "Joule";
+  case Unit::Watt:
+    return "Watt";
+  case Unit::Pascal:
+    return "Pascal";
+  case Unit::Lumen:
+    return "Lumen";
+  case Unit::Lux:
+    return "Lux";
+  case Unit::Coulomb:
+    return "Coulomb";
+  case Unit::Ohm:
+    return "Ohm";
+  case Unit::Farad:
+    return "Farad";
+  case Unit::Weber:
+    return "Weber";
+  case Unit::Tesla:
+    return "Tesla";
+  case Unit::Henry:
+    return "Henry";
+  case Unit::Siemens:
+    return "Siemens";
+  case Unit::Becquerel:
+    return "Becquerel";
+  case Unit::Gray:
+    return "Gray";
+  case Unit::Sievert:
+    return "Sievert";
+  case Unit::Katal:
+    return "Katal";
 
-    case Unit::Unknown:
-    default:
-      return "Unknown";
+  case Unit::Unknown:
+  default:
+    return "Unknown";
   }
 }
 #ifdef WIN32
-bool Hit() {
+bool Hit()
+{
   bool hit = false;
   while (_kbhit()) {
     getchar();
@@ -187,15 +193,16 @@ bool Hit() {
 }
 #endif
 
-class NullBuffer : public std::streambuf {
- public:
+class NullBuffer : public std::streambuf
+{
+public:
   int overflow(int c) { return c; }
 };
 
 NullBuffer Null;
 std::ostream NullStream(&Null);
 
-}  // namespace
+} // namespace
 
 // const std::vector<std::string> names;
 // const std::vector<std::string> topics;
@@ -208,10 +215,11 @@ std::ostream NullStream(&Null);
 constexpr static float x_offset = 0.5;
 constexpr static float y_offset = 0.5;
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   // load from YAML File
-  set_parameters(paths::parameters_path);
-  const int N = parameters::objects.size();  // Number of Objects
+  // set_parameters(paths::parameters_path);
+  // const int N = parameters::objects.size(); // Number of Objects
 
   ////////////////////////////////////////////////////////////
   // FastDDS objects
@@ -227,7 +235,7 @@ int main(int argc, char *argv[]) {
 
   // Initialize each Element of the vector
   // mocap_pub.push_back(DDSPublisher(idl_msg::MocapPubSubType(),
-  // "mocap_srl_quad",
+  // topics.at(0),
   //                                  dp.participant()));
   // mocap_pub.at(0).init();
 
@@ -235,47 +243,64 @@ int main(int argc, char *argv[]) {
   // "mocap_srl_box",
   //                                  dp.participant()));
   // mocap_pub.at(1).init();
-  std::cout << "N:" << N << std::endl;
+  // std::cout << "N:" << N << std::endl;
   // for (int i = 0; i < N; i++) {
   //   std::string topic = parameters::topic_prefix + parameters::objects.at(i);
   //   mocap_pub.push_back(
   //       DDSPublisher(idl_msg::MocapPubSubType(), topic, dp.participant()));
   //   mocap_pub.at(i).init();
   // }
+  if (argc > 11) {
+    std::cout << "[ERROR] Mocap publisher only supports 10 objects. Change "
+                 "code to allow for more."
+              << std::endl;
+    return 0;
+  }
 
-  DDSPublisher quad_pub = DDSPublisher(idl_msg::MocapPubSubType(),
-                                       "mocap_srl_quad", dp.participant());
-  quad_pub.init();
-  cpp_msg::Mocap quad_msg;
+  std::vector<std::string> objects(10, "empty");
+  std::vector<std::string> topics(10, "empty");
 
-  DDSPublisher box_pub = DDSPublisher(idl_msg::MocapPubSubType(),
-                                      "mocap_srl_box", dp.participant());
-  box_pub.init();
-  cpp_msg::Mocap box_msg;
-
-  DDSPublisher stand_pub = DDSPublisher(idl_msg::MocapPubSubType(),
-                                        "mocap_srl_stand", dp.participant());
-  stand_pub.init();
-  cpp_msg::Mocap stand_msg;
-
-  DDSPublisher drop_pub = DDSPublisher(idl_msg::MocapPubSubType(),
-                                       "mocap_srl_drop", dp.participant());
-  drop_pub.init();
-  cpp_msg::Mocap drop_msg;
-
+  // load names from argument list
+  for (int i = 1; i < argc; i++) {
+    objects.at(i - 1) = argv[i];                     // first argument is the command
+    topics.at(i - 1) = "mocap_" + objects.at(i - 1); // first argument is the command
+  }
+  // Print objects and topics (INFO)
+  std::cout << "publishing the following objecst and topics:" << std::endl;
+  for (int i = 0; i < argc - 1; i++) {
+    std::cout << "object: \t" << objects.at(i) << "\t topic: \t" << topics.at(i) << std::endl;
+  }
+  // create publishers
+  DDSPublisher pub[10] = {DDSPublisher(idl_msg::MocapPubSubType(), topics.at(0), dp.participant()),
+                          DDSPublisher(idl_msg::MocapPubSubType(), topics.at(1), dp.participant()),
+                          DDSPublisher(idl_msg::MocapPubSubType(), topics.at(2), dp.participant()),
+                          DDSPublisher(idl_msg::MocapPubSubType(), topics.at(3), dp.participant()),
+                          DDSPublisher(idl_msg::MocapPubSubType(), topics.at(4), dp.participant()),
+                          DDSPublisher(idl_msg::MocapPubSubType(), topics.at(5), dp.participant()),
+                          DDSPublisher(idl_msg::MocapPubSubType(), topics.at(6), dp.participant()),
+                          DDSPublisher(idl_msg::MocapPubSubType(), topics.at(7), dp.participant()),
+                          DDSPublisher(idl_msg::MocapPubSubType(), topics.at(8), dp.participant()),
+                          DDSPublisher(idl_msg::MocapPubSubType(), topics.at(9), dp.participant())};
+  // create messages
+  cpp_msg::Mocap msg[10]{};
+  // initialize publishers
+  for (int i = 0; i < argc - 1; i++) {
+    pub[i].init();
+  }
   //////////////////////////////////////////////////////////
 
   // Program options
 
   std::vector<std::string> Hosts;
-  int Arg = 1;
-  for (Arg; Arg < argc; ++Arg) {
-    if (strncmp(argv[Arg], "--", 2) == 0) {
-      break;
-    }
-    Hosts.push_back(argv[Arg]);
-  }
-
+  // int Arg = 1;
+  // for (Arg; Arg < argc; ++Arg) {
+  //   if (strncmp(argv[Arg], "--", 2) == 0) {
+  //     break;
+  //   }
+  //   Hosts.push_back(argv[Arg]);
+  // }
+  // HARD CODE Vicon Address from LEO C6
+  Hosts.push_back("10.10.10.5");
   if (Hosts.empty()) {
     Hosts.push_back("localhost:801");
   }
@@ -305,12 +330,10 @@ int main(int argc, char *argv[]) {
   ViconDataStreamSDK::CPP::Client DirectClient;
 
   if (bOptimizeWireless) {
-    const Output_ConfigureWireless ConfigureWirelessResult =
-        DirectClient.ConfigureWireless();
+    const Output_ConfigureWireless ConfigureWirelessResult = DirectClient.ConfigureWireless();
 
     if (ConfigureWirelessResult.Result != Result::Success) {
-      std::cout << "Wireless Config: " << ConfigureWirelessResult.Error
-                << std::endl;
+      std::cout << "Wireless Config: " << ConfigureWirelessResult.Error << std::endl;
     }
   }
 
@@ -323,19 +346,18 @@ int main(int argc, char *argv[]) {
     if (!ok) {
       std::cout << "Warning - connect failed... ";
       switch (ConnectResult.Result) {
-        case Result::ClientAlreadyConnected:
-          std::cout << "Client Already Connected" << std::endl;
-          break;
-        case Result::InvalidHostName:
-          std::cout << "Invalid Host Name" << std::endl;
-          break;
-        case Result::ClientConnectionFailed:
-          std::cout << "Client Connection Failed" << std::endl;
-          break;
-        default:
-          std::cout << "Unrecognized Error: " << ConnectResult.Result
-                    << std::endl;
-          break;
+      case Result::ClientAlreadyConnected:
+        std::cout << "Client Already Connected" << std::endl;
+        break;
+      case Result::InvalidHostName:
+        std::cout << "Invalid Host Name" << std::endl;
+        break;
+      case Result::ClientConnectionFailed:
+        std::cout << "Client Connection Failed" << std::endl;
+        break;
+      default:
+        std::cout << "Unrecognized Error: " << ConnectResult.Result << std::endl;
+        break;
       }
     }
 
@@ -358,32 +380,28 @@ int main(int argc, char *argv[]) {
 
     // Set the global up axis
     DirectClient.SetAxisMapping(Direction::Forward, Direction::Left,
-                                Direction::Up);  // Z-up
+                                Direction::Up); // Z-up
 
     if (AxisMapping == "YUp") {
       DirectClient.SetAxisMapping(Direction::Forward, Direction::Up,
-                                  Direction::Right);  // Y-up
+                                  Direction::Right); // Y-up
     } else if (AxisMapping == "XUp") {
       DirectClient.SetAxisMapping(Direction::Up, Direction::Forward,
-                                  Direction::Left);  // Y-up
+                                  Direction::Left); // Y-up
     }
 
-    Output_GetAxisMapping _Output_GetAxisMapping =
-        DirectClient.GetAxisMapping();
-    std::cout << "Axis Mapping: X-" << Adapt(_Output_GetAxisMapping.XAxis)
-              << " Y-" << Adapt(_Output_GetAxisMapping.YAxis) << " Z-"
-              << Adapt(_Output_GetAxisMapping.ZAxis) << std::endl;
+    Output_GetAxisMapping _Output_GetAxisMapping = DirectClient.GetAxisMapping();
+    // std::cout << "Axis Mapping: X-" << Adapt(_Output_GetAxisMapping.XAxis) << " Y-" << Adapt(_Output_GetAxisMapping.YAxis) << " Z-"
+    //          << Adapt(_Output_GetAxisMapping.ZAxis) << std::endl;
 
     // Discover the version number
     Output_GetVersion _Output_GetVersion = DirectClient.GetVersion();
-    std::cout << "Version: " << _Output_GetVersion.Major << "."
-              << _Output_GetVersion.Minor << "." << _Output_GetVersion.Point
-              << "." << _Output_GetVersion.Revision << std::endl;
+    // std::cout << "Version: " << _Output_GetVersion.Major << "." << _Output_GetVersion.Minor << "." << _Output_GetVersion.Point << "."
+    //           << _Output_GetVersion.Revision << std::endl;
 
     if (ClientBufferSize > 0) {
       DirectClient.SetBufferSize(ClientBufferSize);
-      std::cout << "Setting client buffer size to " << ClientBufferSize
-                << std::endl;
+      std::cout << "Setting client buffer size to " << ClientBufferSize << std::endl;
     }
 
     bool bSubjectFilterApplied = false;
@@ -391,8 +409,7 @@ int main(int argc, char *argv[]) {
     ViconDataStreamSDK::CPP::Client &MyClient(DirectClient);
 
     size_t Counter = 0;
-    const std::chrono::high_resolution_clock::time_point StartTime =
-        std::chrono::high_resolution_clock::now();
+    const std::chrono::high_resolution_clock::time_point StartTime = std::chrono::high_resolution_clock::now();
     // Loop until a key is pressed
 #ifdef WIN32
     while (!Hit())
@@ -401,7 +418,7 @@ int main(int argc, char *argv[]) {
 #endif
     {
       // Get a frame
-      OutputStream << "Waiting for new frame...";
+      // OutputStream << "Waiting for new frame...";
       while (MyClient.GetFrame().Result != Result::Success) {
 // Sleep a little so that we don't lumber the CPU with a busy poll
 #ifdef WIN32
@@ -410,112 +427,88 @@ int main(int argc, char *argv[]) {
         sleep(1);
 #endif
 
-        OutputStream << ".";
+        // OutputStream << ".";
       }
-      OutputStream << std::endl;
+      // OutputStream << std::endl;
 
       // We have to call this after the call to get frame, otherwise we don't
       // have any subject info to map the name to ids
       if (!bSubjectFilterApplied) {
         for (const auto &rSubject : FilteredSubjects) {
-          Output_AddToSubjectFilter SubjectFilterResult =
-              MyClient.AddToSubjectFilter(rSubject);
-          bSubjectFilterApplied = bSubjectFilterApplied ||
-                                  SubjectFilterResult.Result == Result::Success;
+          Output_AddToSubjectFilter SubjectFilterResult = MyClient.AddToSubjectFilter(rSubject);
+          bSubjectFilterApplied = bSubjectFilterApplied || SubjectFilterResult.Result == Result::Success;
         }
       }
 
-      const std::chrono::high_resolution_clock::time_point Now =
-          std::chrono::high_resolution_clock::now();
+      const std::chrono::high_resolution_clock::time_point Now = std::chrono::high_resolution_clock::now();
 
       // Get the frame number
       Output_GetFrameNumber _Output_GetFrameNumber = MyClient.GetFrameNumber();
-      OutputStream << "Frame Number: " << _Output_GetFrameNumber.FrameNumber
-                   << std::endl;
+      // OutputStream << "Frame Number: " << _Output_GetFrameNumber.FrameNumber << std::endl;
 
       ////////////////////////////////////////////////////////
       // for (int i = 0; i < N; i++) {
       //   mocap_msg.at(i).header.timestamp =
       //   _Output_GetFrameNumber.FrameNumber;
       // }
-      quad_msg.header.timestamp = _Output_GetFrameNumber.FrameNumber;
-      box_msg.header.timestamp = _Output_GetFrameNumber.FrameNumber;
-      stand_msg.header.timestamp = _Output_GetFrameNumber.FrameNumber;
-      drop_msg.header.timestamp = _Output_GetFrameNumber.FrameNumber;
+      for (int i = 0; i < argc - 1; i++) {
+        msg[i].header.timestamp = _Output_GetFrameNumber.FrameNumber;
+      }
       ////////////////////////////////////////////////////////
       Output_GetFrameRate Rate = MyClient.GetFrameRate();
-      OutputStream << "Frame rate: " << Rate.FrameRateHz << std::endl;
+      // OutputStream << "Frame rate: " << Rate.FrameRateHz << std::endl;
 
       // Show frame rates
-      for (unsigned int FramerateIndex = 0;
-           FramerateIndex < MyClient.GetFrameRateCount().Count;
-           ++FramerateIndex) {
-        std::string FramerateName =
-            MyClient.GetFrameRateName(FramerateIndex).Name;
+      for (unsigned int FramerateIndex = 0; FramerateIndex < MyClient.GetFrameRateCount().Count; ++FramerateIndex) {
+        std::string FramerateName = MyClient.GetFrameRateName(FramerateIndex).Name;
         double FramerateValue = MyClient.GetFrameRateValue(FramerateName).Value;
 
-        OutputStream << FramerateName << ": " << FramerateValue << "Hz"
-                     << std::endl;
+        // OutputStream << FramerateName << ": " << FramerateValue << "Hz" << std::endl;
       }
-      OutputStream << std::endl;
+      // OutputStream << std::endl;
 
       // Get the timecode
       Output_GetTimecode _Output_GetTimecode = MyClient.GetTimecode();
 
-      OutputStream << "Timecode: " << _Output_GetTimecode.Hours << "h "
-                   << _Output_GetTimecode.Minutes << "m "
-                   << _Output_GetTimecode.Seconds << "s "
-                   << _Output_GetTimecode.Frames << "f "
-                   << _Output_GetTimecode.SubFrame << "sf "
-                   << Adapt(_Output_GetTimecode.FieldFlag) << " "
-                   << Adapt(_Output_GetTimecode.Standard) << " "
-                   << _Output_GetTimecode.SubFramesPerFrame << " "
-                   << _Output_GetTimecode.UserBits << std::endl
-                   << std::endl;
+      // OutputStream << "Timecode: " << _Output_GetTimecode.Hours << "h " << _Output_GetTimecode.Minutes << "m " << _Output_GetTimecode.Seconds << "s
+      // "
+      //   << _Output_GetTimecode.Frames << "f " << _Output_GetTimecode.SubFrame << "sf " << Adapt(_Output_GetTimecode.FieldFlag) << " "
+      //   << Adapt(_Output_GetTimecode.Standard) << " " << _Output_GetTimecode.SubFramesPerFrame << " " << _Output_GetTimecode.UserBits
+      //   << std::endl
+      //   << std::endl;
 
       // Get the latency
-      OutputStream << "Latency: " << MyClient.GetLatencyTotal().Total << "s"
-                   << std::endl;
+      // OutputStream << "Latency: " << MyClient.GetLatencyTotal().Total << "s" << std::endl;
 
       ///////////////////////////////////////////////////////////////
       // for (int i = 0; i < N; i++) {
       //   mocap_msg.at(i).latency = MyClient.GetLatencyTotal().Total;
       // }
-      quad_msg.latency = MyClient.GetLatencyTotal().Total;
-      box_msg.latency = MyClient.GetLatencyTotal().Total;
-      stand_msg.latency = MyClient.GetLatencyTotal().Total;
-      drop_msg.latency = MyClient.GetLatencyTotal().Total;
+      for (int i = 0; i < argc - 1; i++) {
+        msg[i].latency = MyClient.GetLatencyTotal().Total;
+      }
 
-      for (unsigned int LatencySampleIndex = 0;
-           LatencySampleIndex < MyClient.GetLatencySampleCount().Count;
-           ++LatencySampleIndex) {
-        std::string SampleName =
-            MyClient.GetLatencySampleName(LatencySampleIndex).Name;
+      for (unsigned int LatencySampleIndex = 0; LatencySampleIndex < MyClient.GetLatencySampleCount().Count; ++LatencySampleIndex) {
+        std::string SampleName = MyClient.GetLatencySampleName(LatencySampleIndex).Name;
         double SampleValue = MyClient.GetLatencySampleValue(SampleName).Value;
 
-        OutputStream << "  " << SampleName << " " << SampleValue << "s"
-                     << std::endl;
+        // OutputStream << "  " << SampleName << " " << SampleValue << "s" << std::endl;
       }
-      OutputStream << std::endl;
+      // OutputStream << std::endl;
 
-      Output_GetHardwareFrameNumber _Output_GetHardwareFrameNumber =
-          MyClient.GetHardwareFrameNumber();
-      OutputStream << "Hardware Frame Number: "
-                   << _Output_GetHardwareFrameNumber.HardwareFrameNumber
-                   << std::endl;
+      Output_GetHardwareFrameNumber _Output_GetHardwareFrameNumber = MyClient.GetHardwareFrameNumber();
+      // OutputStream << "Hardware Frame Number: " << _Output_GetHardwareFrameNumber.HardwareFrameNumber << std::endl;
 
       // Count the number of subjects
       unsigned int SubjectCount = MyClient.GetSubjectCount().SubjectCount;
-      OutputStream << "Subjects (" << SubjectCount << "):" << std::endl;
-      for (unsigned int SubjectIndex = 0; SubjectIndex < SubjectCount;
-           ++SubjectIndex) {  ////////////////////////////////////////////for
-                              /// loop starts here
-        OutputStream << "  Subject #" << SubjectIndex << std::endl;
+      // OutputStream << "Subjects (" << SubjectCount << "):" << std::endl;
+      for (unsigned int SubjectIndex = 0; SubjectIndex < SubjectCount; ++SubjectIndex) { ////////////////////////////////////////////for
+                                                                                         /// loop starts here
+        // OutputStream << "  Subject #" << SubjectIndex << std::endl;
 
         // Get the subject name
-        std::string SubjectName =
-            MyClient.GetSubjectName(SubjectIndex).SubjectName;
-        OutputStream << "    Name: " << SubjectName << std::endl;
+        std::string SubjectName = MyClient.GetSubjectName(SubjectIndex).SubjectName;
+        // OutputStream << "    Name: " << SubjectName << std::endl;
 
         ////////////////////////////////////////////
         // std::cout << "header: " << SubjectName << std::endl;
@@ -526,156 +519,89 @@ int main(int argc, char *argv[]) {
         //     mocap_msg.at(i).header.id = SubjectName;
         //   }
         // }
-        if (SubjectName.compare("srl_quad") == 0) {
-          quad_msg.header.id = SubjectName;
-        }
-        if (SubjectName.compare("srl_box") == 0) {
-          box_msg.header.id = SubjectName;
-        }
-        if (SubjectName.compare("srl_stand") == 0) {
-          stand_msg.header.id = SubjectName;
-        }
-        if (SubjectName.compare("srl_drop") == 0) {
-          drop_msg.header.id = SubjectName;
+        for (int i = 0; i < argc - 1; i++) {
+          if (SubjectName.compare(objects.at(i)) == 0) {
+            msg[i].header.id = SubjectName;
+          }
         }
 
         ////////////////////////////////////////////
 
         // Get the root segment
-        std::string RootSegment =
-            MyClient.GetSubjectRootSegmentName(SubjectName).SegmentName;
-        OutputStream << "    Root Segment: " << RootSegment << std::endl;
+        std::string RootSegment = MyClient.GetSubjectRootSegmentName(SubjectName).SegmentName;
+        // OutputStream << "    Root Segment: " << RootSegment << std::endl;
 
         // Count the number of segments
-        unsigned int SegmentCount =
-            MyClient.GetSegmentCount(SubjectName).SegmentCount;
-        OutputStream << "    Segments (" << SegmentCount << "):" << std::endl;
-        for (unsigned int SegmentIndex = 0; SegmentIndex < SegmentCount;
-             ++SegmentIndex) {
-          OutputStream << "      Segment #" << SegmentIndex << std::endl;
+        unsigned int SegmentCount = MyClient.GetSegmentCount(SubjectName).SegmentCount;
+        // OutputStream << "    Segments (" << SegmentCount << "):" << std::endl;
+        for (unsigned int SegmentIndex = 0; SegmentIndex < SegmentCount; ++SegmentIndex) {
+          // OutputStream << "      Segment #" << SegmentIndex << std::endl;
 
           // Get the segment name
-          std::string SegmentName =
-              MyClient.GetSegmentName(SubjectName, SegmentIndex).SegmentName;
-          OutputStream << "        Name: " << SegmentName << std::endl;
+          std::string SegmentName = MyClient.GetSegmentName(SubjectName, SegmentIndex).SegmentName;
+          // OutputStream << "        Name: " << SegmentName << std::endl;
 
           // Get the segment parent
-          std::string SegmentParentName =
-              MyClient.GetSegmentParentName(SubjectName, SegmentName)
-                  .SegmentName;
-          OutputStream << "        Parent: " << SegmentParentName << std::endl;
+          std::string SegmentParentName = MyClient.GetSegmentParentName(SubjectName, SegmentName).SegmentName;
+          // OutputStream << "        Parent: " << SegmentParentName << std::endl;
 
           // Get the segment's children
-          unsigned int ChildCount =
-              MyClient.GetSegmentChildCount(SubjectName, SegmentName)
-                  .SegmentCount;
-          OutputStream << "     Children (" << ChildCount << "):" << std::endl;
-          for (unsigned int ChildIndex = 0; ChildIndex < ChildCount;
-               ++ChildIndex) {
-            std::string ChildName =
-                MyClient
-                    .GetSegmentChildName(SubjectName, SegmentName, ChildIndex)
-                    .SegmentName;
-            OutputStream << "       " << ChildName << std::endl;
+          unsigned int ChildCount = MyClient.GetSegmentChildCount(SubjectName, SegmentName).SegmentCount;
+          // OutputStream << "     Children (" << ChildCount << "):" << std::endl;
+          for (unsigned int ChildIndex = 0; ChildIndex < ChildCount; ++ChildIndex) {
+            std::string ChildName = MyClient.GetSegmentChildName(SubjectName, SegmentName, ChildIndex).SegmentName;
+            // OutputStream << "       " << ChildName << std::endl;
           }
 
           // Get the static segment scale
-          Output_GetSegmentStaticScale _Output_GetSegmentStaticScale =
-              MyClient.GetSegmentStaticScale(SubjectName, SegmentName);
+          Output_GetSegmentStaticScale _Output_GetSegmentStaticScale = MyClient.GetSegmentStaticScale(SubjectName, SegmentName);
           if (_Output_GetSegmentStaticScale.Result == Result::Success) {
-            OutputStream << "        Static Scale: ("
-                         << _Output_GetSegmentStaticScale.Scale[0] << ", "
-                         << _Output_GetSegmentStaticScale.Scale[1] << ", "
-                         << _Output_GetSegmentStaticScale.Scale[2] << ")"
-                         << std::endl;
+            // OutputStream << "        Static Scale: (" << _Output_GetSegmentStaticScale.Scale[0] << ", " << _Output_GetSegmentStaticScale.Scale[1]
+            //            << ", " << _Output_GetSegmentStaticScale.Scale[2] << ")" << std::endl;
           }
 
           // Get the static segment translation
-          Output_GetSegmentStaticTranslation
-              _Output_GetSegmentStaticTranslation =
-                  MyClient.GetSegmentStaticTranslation(SubjectName,
-                                                       SegmentName);
-          OutputStream << "        Static Translation: ("
-                       << _Output_GetSegmentStaticTranslation.Translation[0]
-                       << ", "
-                       << _Output_GetSegmentStaticTranslation.Translation[1]
-                       << ", "
-                       << _Output_GetSegmentStaticTranslation.Translation[2]
-                       << ")" << std::endl;
+          Output_GetSegmentStaticTranslation _Output_GetSegmentStaticTranslation = MyClient.GetSegmentStaticTranslation(SubjectName, SegmentName);
+          // OutputStream << "        Static Translation: (" << _Output_GetSegmentStaticTranslation.Translation[0] << ", "
+          //            << _Output_GetSegmentStaticTranslation.Translation[1] << ", " << _Output_GetSegmentStaticTranslation.Translation[2] << ")"
+          //          << std::endl;
 
           // Get the static segment rotation in helical co-ordinates
-          Output_GetSegmentStaticRotationHelical
-              _Output_GetSegmentStaticRotationHelical =
-                  MyClient.GetSegmentStaticRotationHelical(SubjectName,
-                                                           SegmentName);
-          OutputStream << "        Static Rotation Helical: ("
-                       << _Output_GetSegmentStaticRotationHelical.Rotation[0]
-                       << ", "
-                       << _Output_GetSegmentStaticRotationHelical.Rotation[1]
-                       << ", "
-                       << _Output_GetSegmentStaticRotationHelical.Rotation[2]
-                       << ")" << std::endl;
+          Output_GetSegmentStaticRotationHelical _Output_GetSegmentStaticRotationHelical =
+              MyClient.GetSegmentStaticRotationHelical(SubjectName, SegmentName);
+          // OutputStream << "        Static Rotation Helical: (" << _Output_GetSegmentStaticRotationHelical.Rotation[0] << ", "
+          //            << _Output_GetSegmentStaticRotationHelical.Rotation[1] << ", " << _Output_GetSegmentStaticRotationHelical.Rotation[2] << ")"
+          //          << std::endl;
 
           // Get the static segment rotation as a matrix
-          Output_GetSegmentStaticRotationMatrix
-              _Output_GetSegmentStaticRotationMatrix =
-                  MyClient.GetSegmentStaticRotationMatrix(SubjectName,
-                                                          SegmentName);
-          OutputStream
-              << "        Static Rotation Matrix: ("
-              << _Output_GetSegmentStaticRotationMatrix.Rotation[0] << ", "
-              << _Output_GetSegmentStaticRotationMatrix.Rotation[1] << ", "
-              << _Output_GetSegmentStaticRotationMatrix.Rotation[2] << ", "
-              << _Output_GetSegmentStaticRotationMatrix.Rotation[3] << ", "
-              << _Output_GetSegmentStaticRotationMatrix.Rotation[4] << ", "
-              << _Output_GetSegmentStaticRotationMatrix.Rotation[5] << ", "
-              << _Output_GetSegmentStaticRotationMatrix.Rotation[6] << ", "
-              << _Output_GetSegmentStaticRotationMatrix.Rotation[7] << ", "
-              << _Output_GetSegmentStaticRotationMatrix.Rotation[8] << ")"
-              << std::endl;
+          Output_GetSegmentStaticRotationMatrix _Output_GetSegmentStaticRotationMatrix =
+              MyClient.GetSegmentStaticRotationMatrix(SubjectName, SegmentName);
+          // OutputStream << "        Static Rotation Matrix: (" << _Output_GetSegmentStaticRotationMatrix.Rotation[0] << ", "
+          //            << _Output_GetSegmentStaticRotationMatrix.Rotation[1] << ", " << _Output_GetSegmentStaticRotationMatrix.Rotation[2] << ", "
+          //          << _Output_GetSegmentStaticRotationMatrix.Rotation[3] << ", " << _Output_GetSegmentStaticRotationMatrix.Rotation[4] << ", "
+          //        << _Output_GetSegmentStaticRotationMatrix.Rotation[5] << ", " << _Output_GetSegmentStaticRotationMatrix.Rotation[6] << ", "
+          //      << _Output_GetSegmentStaticRotationMatrix.Rotation[7] << ", " << _Output_GetSegmentStaticRotationMatrix.Rotation[8] << ")"
+          //    << std::endl;
 
           // Get the static segment rotation in quaternion co-ordinates
-          Output_GetSegmentStaticRotationQuaternion
-              _Output_GetSegmentStaticRotationQuaternion =
-                  MyClient.GetSegmentStaticRotationQuaternion(SubjectName,
-                                                              SegmentName);
-          OutputStream << "        Static Rotation Quaternion: ("
-                       << _Output_GetSegmentStaticRotationQuaternion.Rotation[0]
-                       << ", "
-                       << _Output_GetSegmentStaticRotationQuaternion.Rotation[1]
-                       << ", "
-                       << _Output_GetSegmentStaticRotationQuaternion.Rotation[2]
-                       << ", "
-                       << _Output_GetSegmentStaticRotationQuaternion.Rotation[3]
-                       << ")" << std::endl;
+          Output_GetSegmentStaticRotationQuaternion _Output_GetSegmentStaticRotationQuaternion =
+              MyClient.GetSegmentStaticRotationQuaternion(SubjectName, SegmentName);
+          // OutputStream << "        Static Rotation Quaternion: (" << _Output_GetSegmentStaticRotationQuaternion.Rotation[0] << ", "
+          //             << _Output_GetSegmentStaticRotationQuaternion.Rotation[1] << ", " << _Output_GetSegmentStaticRotationQuaternion.Rotation[2]
+          //           << ", " << _Output_GetSegmentStaticRotationQuaternion.Rotation[3] << ")" << std::endl;
 
           // Get the static segment rotation in EulerXYZ co-ordinates
-          Output_GetSegmentStaticRotationEulerXYZ
-              _Output_GetSegmentStaticRotationEulerXYZ =
-                  MyClient.GetSegmentStaticRotationEulerXYZ(SubjectName,
-                                                            SegmentName);
-          OutputStream << "        Static Rotation EulerXYZ: ("
-                       << _Output_GetSegmentStaticRotationEulerXYZ.Rotation[0]
-                       << ", "
-                       << _Output_GetSegmentStaticRotationEulerXYZ.Rotation[1]
-                       << ", "
-                       << _Output_GetSegmentStaticRotationEulerXYZ.Rotation[2]
-                       << ")" << std::endl;
+          Output_GetSegmentStaticRotationEulerXYZ _Output_GetSegmentStaticRotationEulerXYZ =
+              MyClient.GetSegmentStaticRotationEulerXYZ(SubjectName, SegmentName);
+          // OutputStream << "        Static Rotation EulerXYZ: (" << _Output_GetSegmentStaticRotationEulerXYZ.Rotation[0] << ", "
+          //           << _Output_GetSegmentStaticRotationEulerXYZ.Rotation[1] << ", " << _Output_GetSegmentStaticRotationEulerXYZ.Rotation[2] << ")"
+          //         << std::endl;
 
           // Get the global segment translation
-          Output_GetSegmentGlobalTranslation
-              _Output_GetSegmentGlobalTranslation =
-                  MyClient.GetSegmentGlobalTranslation(SubjectName,
-                                                       SegmentName);
-          OutputStream << "        Global Translation: ("
-                       << _Output_GetSegmentGlobalTranslation.Translation[0]
-                       << ", "
-                       << _Output_GetSegmentGlobalTranslation.Translation[1]
-                       << ", "
-                       << _Output_GetSegmentGlobalTranslation.Translation[2]
-                       << ") "
-                       << Adapt(_Output_GetSegmentGlobalTranslation.Occluded)
-                       << std::endl;
+          Output_GetSegmentGlobalTranslation _Output_GetSegmentGlobalTranslation = MyClient.GetSegmentGlobalTranslation(SubjectName, SegmentName);
+          // OutputStream << "        Global Translation: (" << _Output_GetSegmentGlobalTranslation.Translation[0] << ", "
+          //         << _Output_GetSegmentGlobalTranslation.Translation[1] << ", " << _Output_GetSegmentGlobalTranslation.Translation[2] << ") "
+          //       << Adapt(_Output_GetSegmentGlobalTranslation.Occluded) << std::endl;
 
           // Capture position in FastDDS message
           ////////////////////////////////////////////
@@ -693,101 +619,40 @@ int main(int argc, char *argv[]) {
           //         1000.0;
           //   }
           // }
-          if (SubjectName.compare("srl_quad") == 0) {
-            quad_msg.pose.position.x =
-                (_Output_GetSegmentGlobalTranslation.Translation[0] / 1000.0) -
-                x_offset;
-            quad_msg.pose.position.y =
-                ((_Output_GetSegmentGlobalTranslation.Translation[1] / 1000.0) +
-                 y_offset) *
-                (-1.0);
-            quad_msg.pose.position.z =
-                _Output_GetSegmentGlobalTranslation.Translation[2] / 1000.0;
-          }
-          if (SubjectName.compare("srl_box") == 0) {
-            box_msg.pose.position.x =
-                (_Output_GetSegmentGlobalTranslation.Translation[0] / 1000.0) -
-                x_offset;
-            box_msg.pose.position.y =
-                ((_Output_GetSegmentGlobalTranslation.Translation[1] / 1000.0) +
-                 y_offset) *
-                (-1.0);
-            box_msg.pose.position.z =
-                _Output_GetSegmentGlobalTranslation.Translation[2] / 1000.0;
-          }
-          if (SubjectName.compare("srl_stand") == 0) {
-            stand_msg.pose.position.x =
-                (_Output_GetSegmentGlobalTranslation.Translation[0] / 1000.0) -
-                x_offset;
-            stand_msg.pose.position.y =
-                ((_Output_GetSegmentGlobalTranslation.Translation[1] / 1000.0) +
-                 y_offset) *
-                (-1.0);
-            stand_msg.pose.position.z =
-                _Output_GetSegmentGlobalTranslation.Translation[2] / 1000.0;
-          }
-          if (SubjectName.compare("srl_drop") == 0) {
-            drop_msg.pose.position.x =
-                (_Output_GetSegmentGlobalTranslation.Translation[0] / 1000.0) -
-                x_offset;
-            drop_msg.pose.position.y =
-                ((_Output_GetSegmentGlobalTranslation.Translation[1] / 1000.0) +
-                 y_offset) *
-                (-1.0);
-            drop_msg.pose.position.z =
-                _Output_GetSegmentGlobalTranslation.Translation[2] / 1000.0;
+          for (int i = 0; i < argc - 1; i++) {
+            if (SubjectName.compare(objects.at(i)) == 0) {
+              msg[i].pose.position.x = (_Output_GetSegmentGlobalTranslation.Translation[0] / 1000.0) - x_offset;
+              msg[i].pose.position.y = ((_Output_GetSegmentGlobalTranslation.Translation[1] / 1000.0) + y_offset) * (-1.0);
+              msg[i].pose.position.z = _Output_GetSegmentGlobalTranslation.Translation[2] / 1000.0;
+            }
           }
 
           ////////////////////////////////////////////
 
           // Get the global segment rotation in helical co-ordinates
-          Output_GetSegmentGlobalRotationHelical
-              _Output_GetSegmentGlobalRotationHelical =
-                  MyClient.GetSegmentGlobalRotationHelical(SubjectName,
-                                                           SegmentName);
-          OutputStream << "        Global Rotation Helical: ("
-                       << _Output_GetSegmentGlobalRotationHelical.Rotation[0]
-                       << ", "
-                       << _Output_GetSegmentGlobalRotationHelical.Rotation[1]
-                       << ", "
-                       << _Output_GetSegmentGlobalRotationHelical.Rotation[2]
-                       << ") "
-                       << Adapt(
-                              _Output_GetSegmentGlobalRotationHelical.Occluded)
-                       << std::endl;
+          Output_GetSegmentGlobalRotationHelical _Output_GetSegmentGlobalRotationHelical =
+              MyClient.GetSegmentGlobalRotationHelical(SubjectName, SegmentName);
+          // OutputStream << "        Global Rotation Helical: (" << _Output_GetSegmentGlobalRotationHelical.Rotation[0] << ", "
+          //          << _Output_GetSegmentGlobalRotationHelical.Rotation[1] << ", " << _Output_GetSegmentGlobalRotationHelical.Rotation[2] << ") "
+          //        << Adapt(_Output_GetSegmentGlobalRotationHelical.Occluded) << std::endl;
 
           // Get the global segment rotation as a matrix
-          Output_GetSegmentGlobalRotationMatrix
-              _Output_GetSegmentGlobalRotationMatrix =
-                  MyClient.GetSegmentGlobalRotationMatrix(SubjectName,
-                                                          SegmentName);
-          OutputStream
-              << "        Global Rotation Matrix: ("
-              << _Output_GetSegmentGlobalRotationMatrix.Rotation[0] << ", "
-              << _Output_GetSegmentGlobalRotationMatrix.Rotation[1] << ", "
-              << _Output_GetSegmentGlobalRotationMatrix.Rotation[2] << ", "
-              << _Output_GetSegmentGlobalRotationMatrix.Rotation[3] << ", "
-              << _Output_GetSegmentGlobalRotationMatrix.Rotation[4] << ", "
-              << _Output_GetSegmentGlobalRotationMatrix.Rotation[5] << ", "
-              << _Output_GetSegmentGlobalRotationMatrix.Rotation[6] << ", "
-              << _Output_GetSegmentGlobalRotationMatrix.Rotation[7] << ", "
-              << _Output_GetSegmentGlobalRotationMatrix.Rotation[8] << ") "
-              << Adapt(_Output_GetSegmentGlobalRotationMatrix.Occluded)
-              << std::endl;
+          Output_GetSegmentGlobalRotationMatrix _Output_GetSegmentGlobalRotationMatrix =
+              MyClient.GetSegmentGlobalRotationMatrix(SubjectName, SegmentName);
+          // OutputStream << "        Global Rotation Matrix: (" << _Output_GetSegmentGlobalRotationMatrix.Rotation[0] << ", "
+          //            << _Output_GetSegmentGlobalRotationMatrix.Rotation[1] << ", " << _Output_GetSegmentGlobalRotationMatrix.Rotation[2] << ", "
+          //          << _Output_GetSegmentGlobalRotationMatrix.Rotation[3] << ", " << _Output_GetSegmentGlobalRotationMatrix.Rotation[4] << ", "
+          //        << _Output_GetSegmentGlobalRotationMatrix.Rotation[5] << ", " << _Output_GetSegmentGlobalRotationMatrix.Rotation[6] << ", "
+          //      << _Output_GetSegmentGlobalRotationMatrix.Rotation[7] << ", " << _Output_GetSegmentGlobalRotationMatrix.Rotation[8] << ") "
+          //    << Adapt(_Output_GetSegmentGlobalRotationMatrix.Occluded) << std::endl;
 
           // Get the global segment rotation in quaternion co-ordinates
-          Output_GetSegmentGlobalRotationQuaternion
-              _Output_GetSegmentGlobalRotationQuaternion =
-                  MyClient.GetSegmentGlobalRotationQuaternion(SubjectName,
-                                                              SegmentName);
-          OutputStream
-              << "        Global Rotation Quaternion: ("
-              << _Output_GetSegmentGlobalRotationQuaternion.Rotation[0] << ", "
-              << _Output_GetSegmentGlobalRotationQuaternion.Rotation[1] << ", "
-              << _Output_GetSegmentGlobalRotationQuaternion.Rotation[2] << ", "
-              << _Output_GetSegmentGlobalRotationQuaternion.Rotation[3] << ") "
-              << Adapt(_Output_GetSegmentGlobalRotationQuaternion.Occluded)
-              << std::endl;
+          Output_GetSegmentGlobalRotationQuaternion _Output_GetSegmentGlobalRotationQuaternion =
+              MyClient.GetSegmentGlobalRotationQuaternion(SubjectName, SegmentName);
+          // OutputStream << "        Global Rotation Quaternion: (" << _Output_GetSegmentGlobalRotationQuaternion.Rotation[0] << ", "
+          //            << _Output_GetSegmentGlobalRotationQuaternion.Rotation[1] << ", " << _Output_GetSegmentGlobalRotationQuaternion.Rotation[2]
+          //          << ", " << _Output_GetSegmentGlobalRotationQuaternion.Rotation[3] << ") "
+          //        << Adapt(_Output_GetSegmentGlobalRotationQuaternion.Occluded) << std::endl;
 
           // Capture position in FastDDS message
           ////////////////////////////////////////////
@@ -808,149 +673,66 @@ int main(int argc, char *argv[]) {
           ////////////////////////////////////////////
 
           // Get the global segment rotation in EulerXYZ co-ordinates
-          Output_GetSegmentGlobalRotationEulerXYZ
-              _Output_GetSegmentGlobalRotationEulerXYZ =
-                  MyClient.GetSegmentGlobalRotationEulerXYZ(SubjectName,
-                                                            SegmentName);
-          OutputStream << "        Global Rotation EulerXYZ: ("
-                       << _Output_GetSegmentGlobalRotationEulerXYZ.Rotation[0]
-                       << ", "
-                       << _Output_GetSegmentGlobalRotationEulerXYZ.Rotation[1]
-                       << ", "
-                       << _Output_GetSegmentGlobalRotationEulerXYZ.Rotation[2]
-                       << ") "
-                       << Adapt(
-                              _Output_GetSegmentGlobalRotationEulerXYZ.Occluded)
-                       << std::endl;
+          Output_GetSegmentGlobalRotationEulerXYZ _Output_GetSegmentGlobalRotationEulerXYZ =
+              MyClient.GetSegmentGlobalRotationEulerXYZ(SubjectName, SegmentName);
+          // OutputStream << "        Global Rotation EulerXYZ: (" << _Output_GetSegmentGlobalRotationEulerXYZ.Rotation[0] << ", "
+          //            << _Output_GetSegmentGlobalRotationEulerXYZ.Rotation[1] << ", " << _Output_GetSegmentGlobalRotationEulerXYZ.Rotation[2] << ")
+          //            "
+          //          << Adapt(_Output_GetSegmentGlobalRotationEulerXYZ.Occluded) << std::endl;
           // publish euler Rotation to DDS in degrees
-          if (SubjectName.compare("srl_quad") == 0) {
-            quad_msg.pose.orientation_euler.roll =
-                _Output_GetSegmentGlobalRotationEulerXYZ.Rotation[0] *
-                (180.0 / M_PI);
-            quad_msg.pose.orientation_euler.pitch =
-                _Output_GetSegmentGlobalRotationEulerXYZ.Rotation[1] *
-                (180.0 / M_PI);
-            quad_msg.pose.orientation_euler.yaw =
-                _Output_GetSegmentGlobalRotationEulerXYZ.Rotation[2] *
-                (180.0 / M_PI);
+          for (int i = 0; i < argc - 1; i++) {
+            if (SubjectName.compare(objects.at(i)) == 0) {
+              msg[i].pose.orientation_euler.roll = _Output_GetSegmentGlobalRotationEulerXYZ.Rotation[0] * (180.0 / M_PI);
+              msg[i].pose.orientation_euler.roll = _Output_GetSegmentGlobalRotationEulerXYZ.Rotation[1] * (180.0 / M_PI);
+              msg[i].pose.orientation_euler.yaw = _Output_GetSegmentGlobalRotationEulerXYZ.Rotation[2] * (180.0 / M_PI);
+            }
           }
-          if (SubjectName.compare("srl_box") == 0) {
-            box_msg.pose.orientation_euler.roll =
-                _Output_GetSegmentGlobalRotationEulerXYZ.Rotation[0] *
-                (180.0 / M_PI);
-            box_msg.pose.orientation_euler.pitch =
-                _Output_GetSegmentGlobalRotationEulerXYZ.Rotation[1] *
-                (180.0 / M_PI);
-            box_msg.pose.orientation_euler.yaw =
-                _Output_GetSegmentGlobalRotationEulerXYZ.Rotation[2] *
-                (180.0 / M_PI);
-          }
-          if (SubjectName.compare("srl_stand") == 0) {
-            stand_msg.pose.orientation_euler.roll =
-                _Output_GetSegmentGlobalRotationEulerXYZ.Rotation[0] *
-                (180.0 / M_PI);
-            stand_msg.pose.orientation_euler.pitch =
-                _Output_GetSegmentGlobalRotationEulerXYZ.Rotation[1] *
-                (180.0 / M_PI);
-            stand_msg.pose.orientation_euler.yaw =
-                _Output_GetSegmentGlobalRotationEulerXYZ.Rotation[2] *
-                (180.0 / M_PI);
-          }
-          if (SubjectName.compare("srl_drop") == 0) {
-            drop_msg.pose.orientation_euler.roll =
-                _Output_GetSegmentGlobalRotationEulerXYZ.Rotation[0] *
-                (180.0 / M_PI);
-            drop_msg.pose.orientation_euler.pitch =
-                _Output_GetSegmentGlobalRotationEulerXYZ.Rotation[1] *
-                (180.0 / M_PI);
-            drop_msg.pose.orientation_euler.yaw =
-                _Output_GetSegmentGlobalRotationEulerXYZ.Rotation[2] *
-                (180.0 / M_PI);
-          }
+
           // Get the local segment translation
-          Output_GetSegmentLocalTranslation _Output_GetSegmentLocalTranslation =
-              MyClient.GetSegmentLocalTranslation(SubjectName, SegmentName);
-          OutputStream << "        Local Translation: ("
-                       << _Output_GetSegmentLocalTranslation.Translation[0]
-                       << ", "
-                       << _Output_GetSegmentLocalTranslation.Translation[1]
-                       << ", "
-                       << _Output_GetSegmentLocalTranslation.Translation[2]
-                       << ") "
-                       << Adapt(_Output_GetSegmentLocalTranslation.Occluded)
-                       << std::endl;
+          Output_GetSegmentLocalTranslation _Output_GetSegmentLocalTranslation = MyClient.GetSegmentLocalTranslation(SubjectName, SegmentName);
+          // OutputStream << "        Local Translation: (" << _Output_GetSegmentLocalTranslation.Translation[0] << ", "
+          //          << _Output_GetSegmentLocalTranslation.Translation[1] << ", " << _Output_GetSegmentLocalTranslation.Translation[2] << ") "
+          //        << Adapt(_Output_GetSegmentLocalTranslation.Occluded) << std::endl;
 
           // Get the local segment rotation in helical co-ordinates
-          Output_GetSegmentLocalRotationHelical
-              _Output_GetSegmentLocalRotationHelical =
-                  MyClient.GetSegmentLocalRotationHelical(SubjectName,
-                                                          SegmentName);
-          OutputStream << "        Local Rotation Helical: ("
-                       << _Output_GetSegmentLocalRotationHelical.Rotation[0]
-                       << ", "
-                       << _Output_GetSegmentLocalRotationHelical.Rotation[1]
-                       << ", "
-                       << _Output_GetSegmentLocalRotationHelical.Rotation[2]
-                       << ") "
-                       << Adapt(_Output_GetSegmentLocalRotationHelical.Occluded)
-                       << std::endl;
+          Output_GetSegmentLocalRotationHelical _Output_GetSegmentLocalRotationHelical =
+              MyClient.GetSegmentLocalRotationHelical(SubjectName, SegmentName);
+          // OutputStream << "        Local Rotation Helical: (" << _Output_GetSegmentLocalRotationHelical.Rotation[0] << ", "
+          //              << _Output_GetSegmentLocalRotationHelical.Rotation[1] << ", " << _Output_GetSegmentLocalRotationHelical.Rotation[2] << ") "
+          //              << Adapt(_Output_GetSegmentLocalRotationHelical.Occluded) << std::endl;
 
           // Get the local segment rotation as a matrix
-          Output_GetSegmentLocalRotationMatrix
-              _Output_GetSegmentLocalRotationMatrix =
-                  MyClient.GetSegmentLocalRotationMatrix(SubjectName,
-                                                         SegmentName);
-          OutputStream
-              << "        Local Rotation Matrix: ("
-              << _Output_GetSegmentLocalRotationMatrix.Rotation[0] << ", "
-              << _Output_GetSegmentLocalRotationMatrix.Rotation[1] << ", "
-              << _Output_GetSegmentLocalRotationMatrix.Rotation[2] << ", "
-              << _Output_GetSegmentLocalRotationMatrix.Rotation[3] << ", "
-              << _Output_GetSegmentLocalRotationMatrix.Rotation[4] << ", "
-              << _Output_GetSegmentLocalRotationMatrix.Rotation[5] << ", "
-              << _Output_GetSegmentLocalRotationMatrix.Rotation[6] << ", "
-              << _Output_GetSegmentLocalRotationMatrix.Rotation[7] << ", "
-              << _Output_GetSegmentLocalRotationMatrix.Rotation[8] << ") "
-              << Adapt(_Output_GetSegmentLocalRotationMatrix.Occluded)
-              << std::endl;
+          Output_GetSegmentLocalRotationMatrix _Output_GetSegmentLocalRotationMatrix =
+              MyClient.GetSegmentLocalRotationMatrix(SubjectName, SegmentName);
+          // OutputStream << "        Local Rotation Matrix: (" << _Output_GetSegmentLocalRotationMatrix.Rotation[0] << ", "
+          //              << _Output_GetSegmentLocalRotationMatrix.Rotation[1] << ", " << _Output_GetSegmentLocalRotationMatrix.Rotation[2] << ", "
+          //              << _Output_GetSegmentLocalRotationMatrix.Rotation[3] << ", " << _Output_GetSegmentLocalRotationMatrix.Rotation[4] << ", "
+          //              << _Output_GetSegmentLocalRotationMatrix.Rotation[5] << ", " << _Output_GetSegmentLocalRotationMatrix.Rotation[6] << ", "
+          //              << _Output_GetSegmentLocalRotationMatrix.Rotation[7] << ", " << _Output_GetSegmentLocalRotationMatrix.Rotation[8] << ") "
+          //              << Adapt(_Output_GetSegmentLocalRotationMatrix.Occluded) << std::endl;
 
           // Get the local segment rotation in quaternion co-ordinates
-          Output_GetSegmentLocalRotationQuaternion
-              _Output_GetSegmentLocalRotationQuaternion =
-                  MyClient.GetSegmentLocalRotationQuaternion(SubjectName,
-                                                             SegmentName);
-          OutputStream
-              << "        Local Rotation Quaternion: ("
-              << _Output_GetSegmentLocalRotationQuaternion.Rotation[0] << ", "
-              << _Output_GetSegmentLocalRotationQuaternion.Rotation[1] << ", "
-              << _Output_GetSegmentLocalRotationQuaternion.Rotation[2] << ", "
-              << _Output_GetSegmentLocalRotationQuaternion.Rotation[3] << ") "
-              << Adapt(_Output_GetSegmentLocalRotationQuaternion.Occluded)
-              << std::endl;
+          Output_GetSegmentLocalRotationQuaternion _Output_GetSegmentLocalRotationQuaternion =
+              MyClient.GetSegmentLocalRotationQuaternion(SubjectName, SegmentName);
+          // OutputStream << "        Local Rotation Quaternion: (" << _Output_GetSegmentLocalRotationQuaternion.Rotation[0] << ", "
+          //              << _Output_GetSegmentLocalRotationQuaternion.Rotation[1] << ", " << _Output_GetSegmentLocalRotationQuaternion.Rotation[2]
+          //              << ", " << _Output_GetSegmentLocalRotationQuaternion.Rotation[3] << ") "
+          //              << Adapt(_Output_GetSegmentLocalRotationQuaternion.Occluded) << std::endl;
 
           // Get the local segment rotation in EulerXYZ co-ordinates
-          Output_GetSegmentLocalRotationEulerXYZ
-              _Output_GetSegmentLocalRotationEulerXYZ =
-                  MyClient.GetSegmentLocalRotationEulerXYZ(SubjectName,
-                                                           SegmentName);
-          OutputStream << "        Local Rotation EulerXYZ: ("
-                       << _Output_GetSegmentLocalRotationEulerXYZ.Rotation[0]
-                       << ", "
-                       << _Output_GetSegmentLocalRotationEulerXYZ.Rotation[1]
-                       << ", "
-                       << _Output_GetSegmentLocalRotationEulerXYZ.Rotation[2]
-                       << ") "
-                       << Adapt(
-                              _Output_GetSegmentLocalRotationEulerXYZ.Occluded)
-                       << std::endl;
+          Output_GetSegmentLocalRotationEulerXYZ _Output_GetSegmentLocalRotationEulerXYZ =
+              MyClient.GetSegmentLocalRotationEulerXYZ(SubjectName, SegmentName);
+          // OutputStream << "        Local Rotation EulerXYZ: (" << _Output_GetSegmentLocalRotationEulerXYZ.Rotation[0] << ", "
+          //              << _Output_GetSegmentLocalRotationEulerXYZ.Rotation[1] << ", " << _Output_GetSegmentLocalRotationEulerXYZ.Rotation[2] << ")
+          //              "
+          //              << Adapt(_Output_GetSegmentLocalRotationEulerXYZ.Occluded) << std::endl;
         }
 
         // Get the quality of the subject (object) if supported
-        Output_GetObjectQuality _Output_GetObjectQuality =
-            MyClient.GetObjectQuality(SubjectName);
+        Output_GetObjectQuality _Output_GetObjectQuality = MyClient.GetObjectQuality(SubjectName);
         if (_Output_GetObjectQuality.Result == Result::Success) {
           double Quality = _Output_GetObjectQuality.Quality;
-          OutputStream << "    Quality: " << Quality << std::endl;
+          // OutputStream << "    Quality: " << Quality << std::endl;
         }
 
         ////////////////////////////////////
@@ -965,10 +747,15 @@ int main(int argc, char *argv[]) {
         //     std::cout << "postpublihs" << std::endl;
         //   }
         // }
-        quad_pub.publish(quad_msg);
-        box_pub.publish(box_msg);
-        stand_pub.publish(stand_msg);
-        drop_pub.publish(drop_msg);
+        for (int i = 0; i < argc - 1; i++) {
+          if (SubjectName.compare(objects.at(i)) == 0) {
+            pub[i].publish(msg[i]);
+          }
+        }
+        // quad_pub.publish(quad_msg);
+        //  box_pub.publish(box_msg);
+        //  stand_pub.publish(stand_msg);
+        //  drop_pub.publish(drop_msg);
         ////////////////////////////////////
       }
     }
