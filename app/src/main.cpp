@@ -22,9 +22,9 @@
 
 #include "DataStreamClient.h"
 #include "MocapPubSubTypes.h"
-#include "default_participant.h"
-#include "default_publisher.h"
+#include "domain_participant.h"
 #include "paths.h"
+#include "publisher.h"
 #include "sensor_msgs/msgs/Mocap.h"
 #include "set_parameters.h"
 
@@ -258,7 +258,7 @@ int main(int argc, char *argv[])
   }
 
   std::vector<std::string> objects(10, "empty");
-  std::vector<std::string> topics(10, "empty");
+  std::vector<std::string> topics = {"empty0", "empty1", "empty2", "empty3", "empty4", "empty5", "empty6", "empty7", "empty8", "empty9"};
 
   // load names from argument list
   for (int i = 1; i < argc; i++) {
@@ -270,6 +270,7 @@ int main(int argc, char *argv[])
   for (int i = 0; i < argc - 1; i++) {
     std::cout << "object: \t" << objects.at(i) << "\t topic: \t" << topics.at(i) << std::endl;
   }
+
   // create publishers
   DDSPublisher pub[10] = {DDSPublisher(idl_msg::MocapPubSubType(), topics.at(0), dp.participant()),
                           DDSPublisher(idl_msg::MocapPubSubType(), topics.at(1), dp.participant()),
@@ -284,9 +285,9 @@ int main(int argc, char *argv[])
   // create messages
   cpp_msg::Mocap msg[10]{};
   // initialize publishers
-  for (int i = 0; i < argc - 1; i++) {
-    pub[i].init();
-  }
+  // for (int i = 0; i < argc - 1; i++) {
+  //   pub[i].init();
+  // }
   //////////////////////////////////////////////////////////
 
   // Program options
