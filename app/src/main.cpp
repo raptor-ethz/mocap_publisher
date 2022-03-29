@@ -936,28 +936,14 @@ int main(int argc, char *argv[]) {
           // OutputStream << "    Quality: " << Quality << std::endl;
         }
 
-        ////////////////////////////////////
-
-        // Publish data
-        // for (int i = 0; i < N; i++) {
-        //   if (SubjectName.compare(parameters::objects.at(i)) == 0) {
-        //     std::cout << "i:" << i << "prepublish" << std::endl;
-        //     std::cout << parameters::objects.at(i) << std::endl;
-
-        //     mocap_pub.at(i).publish(mocap_msg.at(i));
-        //     std::cout << "postpublihs" << std::endl;
-        //   }
-        // }
         for (int i = 0; i < argc - 1; i++) {
           if (SubjectName.compare(objects.at(i)) == 0) {
+            // std::cout << msg[i].position.x << "\t" << msg[i].position.y <<
+            // "\t"
+            //           << msg[i].position.z << std::endl;
             pub[i].publish(msg[i]);
           }
         }
-        // quad_pub.publish(quad_msg);
-        //  box_pub.publish(box_msg);
-        //  stand_pub.publish(stand_msg);
-        //  drop_pub.publish(drop_msg);
-        ////////////////////////////////////
       }
     }
 
