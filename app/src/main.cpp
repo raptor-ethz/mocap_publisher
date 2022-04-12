@@ -324,7 +324,7 @@ int main(int argc, char *argv[])
       unsigned int SubjectCount = MyClient.GetSubjectCount().SubjectCount;
       // OutputStream << "Subjects (" << SubjectCount << "):" << std::endl;
 
-      // loop over all subjects
+      // loop over all subject
       for (unsigned int SubjectIndex = 0; SubjectIndex < SubjectCount;
            ++SubjectIndex)
       { ////////////////////////////////////////////for
