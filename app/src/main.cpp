@@ -323,6 +323,8 @@ int main(int argc, char *argv[])
       // Count the number of subjects
       unsigned int SubjectCount = MyClient.GetSubjectCount().SubjectCount;
       // OutputStream << "Subjects (" << SubjectCount << "):" << std::endl;
+
+      // loop over all subjects
       for (unsigned int SubjectIndex = 0; SubjectIndex < SubjectCount;
            ++SubjectIndex)
       { ////////////////////////////////////////////for
@@ -363,6 +365,8 @@ int main(int argc, char *argv[])
             MyClient.GetSegmentCount(SubjectName).SegmentCount;
         // OutputStream << "    Segments (" << SegmentCount << "):" <<
         // std::endl;
+
+        // loop over all segments
         for (unsigned int SegmentIndex = 0; SegmentIndex < SegmentCount;
              ++SegmentIndex)
         {
