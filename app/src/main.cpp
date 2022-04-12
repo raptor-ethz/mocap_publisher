@@ -9,240 +9,18 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-// FastDDS
-#include <cassert>
-#include <chrono>
-#include <cstdlib>
-#include <fstream>
-#include <iomanip>
-#include <iostream>
-#include <sstream>
-#include <string>
-#include <vector>
-
-#include "DataStreamClient.h"
-#include "Mocap_msg.h"
-#include "Mocap_msgPubSubTypes.h"
-#include "domain_participant.h"
-#include "paths.h"
-#include "publisher.h"
-#include "set_parameters.h"
-
-#ifdef WIN32
-#include <conio.h>   // For _kbhit()
-#include <windows.h> // For Sleep()
-
-#include <cstdio> // For getchar()
-#else
-#include <unistd.h> // For sleep()
-#endif              // WIN32
-
-#include <string.h>
-#include <time.h>
-
-using namespace ViconDataStreamSDK::CPP;
-
-namespace {
-std::string Adapt(const bool i_Value) { return i_Value ? "True" : "False"; }
-
-// Set time standard
-std::string Adapt(const TimecodeStandard::Enum i_Standard) {
-  switch (i_Standard) {
-  default:
-  case TimecodeStandard::None:
-    return "0";
-  case TimecodeStandard::PAL:
-    return "1";
-  case TimecodeStandard::NTSC:
-    return "2";
-  case TimecodeStandard::NTSCDrop:
-    return "3";
-  case TimecodeStandard::Film:
-    return "4";
-  case TimecodeStandard::NTSCFilm:
-    return "5";
-  case TimecodeStandard::ATSC:
-    return "6";
-  }
-}
-
-// Doubt - Set the direction for i axis
-std::string Adapt(const Direction::Enum i_Direction) {
-  switch (i_Direction) {
-  case Direction::Forward:
-    return "Forward";
-  case Direction::Backward:
-    return "Backward";
-  case Direction::Left:
-    return "Left";
-  case Direction::Right:
-    return "Right";
-  case Direction::Up:
-    return "Up";
-  case Direction::Down:
-    return "Down";
-  default:
-    return "Unknown";
-  }
-}
-
-// Enable forceplate input device (not relevant)
-std::string Adapt(const DeviceType::Enum i_DeviceType) {
-  switch (i_DeviceType) {
-  case DeviceType::ForcePlate:
-    return "ForcePlate";
-  case DeviceType::Unknown:
-  default:
-    return "Unknown";
-  }
-}
-
-// Set the unit for state variable
-std::string Adapt(const Unit::Enum i_Unit) {
-  switch (i_Unit) {
-  case Unit::Meter:
-    return "Meter";
-  case Unit::Volt:
-    return "Volt";
-  case Unit::NewtonMeter:
-    return "NewtonMeter";
-  case Unit::Newton:
-    return "Newton";
-  case Unit::Kilogram:
-    return "Kilogram";
-  case Unit::Second:
-    return "Second";
-  case Unit::Ampere:
-    return "Ampere";
-  case Unit::Kelvin:
-    return "Kelvin";
-  case Unit::Mole:
-    return "Mole";
-  case Unit::Candela:
-    return "Candela";
-  case Unit::Radian:
-    return "Radian";
-  case Unit::Steradian:
-    return "Steradian";
-  case Unit::MeterSquared:
-    return "MeterSquared";
-  case Unit::MeterCubed:
-    return "MeterCubed";
-  case Unit::MeterPerSecond:
-    return "MeterPerSecond";
-  case Unit::MeterPerSecondSquared:
-    return "MeterPerSecondSquared";
-  case Unit::RadianPerSecond:
-    return "RadianPerSecond";
-  case Unit::RadianPerSecondSquared:
-    return "RadianPerSecondSquared";
-  case Unit::Hertz:
-    return "Hertz";
-  case Unit::Joule:
-    return "Joule";
-  case Unit::Watt:
-    return "Watt";
-  case Unit::Pascal:
-    return "Pascal";
-  case Unit::Lumen:
-    return "Lumen";
-  case Unit::Lux:
-    return "Lux";
-  case Unit::Coulomb:
-    return "Coulomb";
-  case Unit::Ohm:
-    return "Ohm";
-  case Unit::Farad:
-    return "Farad";
-  case Unit::Weber:
-    return "Weber";
-  case Unit::Tesla:
-    return "Tesla";
-  case Unit::Henry:
-    return "Henry";
-  case Unit::Siemens:
-    return "Siemens";
-  case Unit::Becquerel:
-    return "Becquerel";
-  case Unit::Gray:
-    return "Gray";
-  case Unit::Sievert:
-    return "Sievert";
-  case Unit::Katal:
-    return "Katal";
-
-  case Unit::Unknown:
-  default:
-    return "Unknown";
-  }
-}
-#ifdef WIN32
-bool Hit() {
-  bool hit = false;
-  while (_kbhit()) {
-    getchar();
-    hit = true;
-  }
-  return hit;
-}
-#endif
-
-class NullBuffer : public std::streambuf {
-public:
-  int overflow(int c) { return c; }
-};
-
-NullBuffer Null;
-std::ostream NullStream(&Null);
-
-} // namespace
-
-// const std::vector<std::string> names;
-// const std::vector<std::string> topics;
-
-// const std::string quad_name[] = "srl_quad";
-// const std::string quad_topic = "mocap_pose";
-// const std::string object_name = "srl_box";
-// const std::string object_topic = "mocap_object_pose";
+#include "include_helper.h"
 
 constexpr static float x_offset = 0.5;
 constexpr static float y_offset = 0.5;
 
-int main(int argc, char *argv[]) {
-  // load from YAML File
-  // set_parameters(paths::parameters_path);
-  // const int N = parameters::objects.size(); // Number of Objects
-
-  ////////////////////////////////////////////////////////////
-  // FastDDS objects
-
+int main(int argc, char *argv[])
+{
   // Create participant. Arguments-> Domain id, QOS name
   DefaultParticipant dp(0, "mocap_publisher");
 
-  // // Create DDS publisher vector
-  // std::vector<DDSPublisher> mocap_pub;
-
-  // // Create Mocap Message Vector
-  // std::vector<cpp_msg::Mocap> mocap_msg(N);
-
-  // Initialize each Element of the vector
-  // mocap_pub.push_back(DDSPublisher(idl_msg::MocapPubSubType(),
-  // topics.at(0),
-  //                                  dp.participant()));
-  // mocap_pub.at(0).init();
-
-  // mocap_pub.push_back(DDSPublisher(idl_msg::MocapPubSubType(),
-  // "mocap_srl_box",
-  //                                  dp.participant()));
-  // mocap_pub.at(1).init();
-  // std::cout << "N:" << N << std::endl;
-  // for (int i = 0; i < N; i++) {
-  //   std::string topic = parameters::topic_prefix + parameters::objects.at(i);
-  //   mocap_pub.push_back(
-  //       DDSPublisher(idl_msg::MocapPubSubType(), topic, dp.participant()));
-  //   mocap_pub.at(i).init();
-  // }
-  if (argc > 11) {
+  if (argc > 11)
+  {
     std::cout << "[ERROR] Mocap publisher only supports 10 objects. Change "
                  "code to allow for more."
               << std::endl;
@@ -255,14 +33,16 @@ int main(int argc, char *argv[]) {
                                      "empty8", "empty9"};
 
   // load names from argument list
-  for (int i = 1; i < argc; i++) {
+  for (int i = 1; i < argc; i++)
+  {
     objects.at(i - 1) = argv[i]; // first argument is the command
     topics.at(i - 1) =
         "mocap_" + objects.at(i - 1); // first argument is the command
   }
   // Print objects and topics (INFO)
   std::cout << "publishing the following objecst and topics:" << std::endl;
-  for (int i = 0; i < argc - 1; i++) {
+  for (int i = 0; i < argc - 1; i++)
+  {
     std::cout << "object: \t" << objects.at(i) << "\t topic: \t" << topics.at(i)
               << std::endl;
   }
@@ -290,25 +70,13 @@ int main(int argc, char *argv[]) {
                                        topics.at(9), dp.participant())};
   // create messages
   cpp_msg::Mocap_msg msg[10]{};
-  // initialize publishers
-  // for (int i = 0; i < argc - 1; i++) {
-  //   pub[i].init();
-  // }
-  //////////////////////////////////////////////////////////
 
-  // Program options
-
+  /* VICON Datastream Settings */
   std::vector<std::string> Hosts;
-  // int Arg = 1;
-  // for (Arg; Arg < argc; ++Arg) {
-  //   if (strncmp(argv[Arg], "--", 2) == 0) {
-  //     break;
-  //   }
-  //   Hosts.push_back(argv[Arg]);
-  // }
   // HARD CODE Vicon Address from LEO C6
   Hosts.push_back("10.10.10.5");
-  if (Hosts.empty()) {
+  if (Hosts.empty())
+  {
     Hosts.push_back("localhost:801");
   }
 
@@ -325,8 +93,10 @@ int main(int argc, char *argv[]) {
 
   bool First = true;
   std::string HostName;
-  for (const auto &rHost : Hosts) {
-    if (!First) {
+  for (const auto &rHost : Hosts)
+  {
+    if (!First)
+    {
       HostName += ";";
     }
     HostName += rHost;
@@ -336,25 +106,30 @@ int main(int argc, char *argv[]) {
   // Make a new client
   ViconDataStreamSDK::CPP::Client DirectClient;
 
-  if (bOptimizeWireless) {
+  if (bOptimizeWireless)
+  {
     const Output_ConfigureWireless ConfigureWirelessResult =
         DirectClient.ConfigureWireless();
 
-    if (ConfigureWirelessResult.Result != Result::Success) {
+    if (ConfigureWirelessResult.Result != Result::Success)
+    {
       std::cout << "Wireless Config: " << ConfigureWirelessResult.Error
                 << std::endl;
     }
   }
 
   std::cout << "Connecting to " << HostName << " ..." << std::flush;
-  while (!DirectClient.IsConnected().Connected) {
+  while (!DirectClient.IsConnected().Connected)
+  {
     // Direct connection
     const Output_Connect ConnectResult = DirectClient.Connect(HostName);
     const bool ok = (ConnectResult.Result == Result::Success);
 
-    if (!ok) {
+    if (!ok)
+    {
       std::cout << "Warning - connect failed... ";
-      switch (ConnectResult.Result) {
+      switch (ConnectResult.Result)
+      {
       case Result::ClientAlreadyConnected:
         std::cout << "Client Already Connected" << std::endl;
         break;
@@ -392,10 +167,13 @@ int main(int argc, char *argv[]) {
     DirectClient.SetAxisMapping(Direction::Forward, Direction::Left,
                                 Direction::Up); // Z-up
 
-    if (AxisMapping == "YUp") {
+    if (AxisMapping == "YUp")
+    {
       DirectClient.SetAxisMapping(Direction::Forward, Direction::Up,
                                   Direction::Right); // Y-up
-    } else if (AxisMapping == "XUp") {
+    }
+    else if (AxisMapping == "XUp")
+    {
       DirectClient.SetAxisMapping(Direction::Up, Direction::Forward,
                                   Direction::Left); // Y-up
     }
@@ -412,7 +190,8 @@ int main(int argc, char *argv[]) {
     // _Output_GetVersion.Minor << "." << _Output_GetVersion.Point << "."
     //           << _Output_GetVersion.Revision << std::endl;
 
-    if (ClientBufferSize > 0) {
+    if (ClientBufferSize > 0)
+    {
       DirectClient.SetBufferSize(ClientBufferSize);
       std::cout << "Setting client buffer size to " << ClientBufferSize
                 << std::endl;
@@ -434,7 +213,8 @@ int main(int argc, char *argv[]) {
     {
       // Get a frame
       // OutputStream << "Waiting for new frame...";
-      while (MyClient.GetFrame().Result != Result::Success) {
+      while (MyClient.GetFrame().Result != Result::Success)
+      {
 // Sleep a little so that we don't lumber the CPU with a busy poll
 #ifdef WIN32
         Sleep(200);
@@ -448,8 +228,10 @@ int main(int argc, char *argv[]) {
 
       // We have to call this after the call to get frame, otherwise we don't
       // have any subject info to map the name to ids
-      if (!bSubjectFilterApplied) {
-        for (const auto &rSubject : FilteredSubjects) {
+      if (!bSubjectFilterApplied)
+      {
+        for (const auto &rSubject : FilteredSubjects)
+        {
           Output_AddToSubjectFilter SubjectFilterResult =
               MyClient.AddToSubjectFilter(rSubject);
           bSubjectFilterApplied = bSubjectFilterApplied ||
@@ -470,7 +252,8 @@ int main(int argc, char *argv[]) {
       //   mocap_msg.at(i).header.timestamp =
       //   _Output_GetFrameNumber.FrameNumber;
       // }
-      for (int i = 0; i < argc - 1; i++) {
+      for (int i = 0; i < argc - 1; i++)
+      {
         msg[i].header.timestamp = _Output_GetFrameNumber.FrameNumber;
       }
       ////////////////////////////////////////////////////////
@@ -480,7 +263,8 @@ int main(int argc, char *argv[]) {
       // Show frame rates
       for (unsigned int FramerateIndex = 0;
            FramerateIndex < MyClient.GetFrameRateCount().Count;
-           ++FramerateIndex) {
+           ++FramerateIndex)
+      {
         std::string FramerateName =
             MyClient.GetFrameRateName(FramerateIndex).Name;
         double FramerateValue = MyClient.GetFrameRateValue(FramerateName).Value;
@@ -513,13 +297,15 @@ int main(int argc, char *argv[]) {
       // for (int i = 0; i < N; i++) {
       //   mocap_msg.at(i).latency = MyClient.GetLatencyTotal().Total;
       // }
-      for (int i = 0; i < argc - 1; i++) {
+      for (int i = 0; i < argc - 1; i++)
+      {
         msg[i].latency = MyClient.GetLatencyTotal().Total;
       }
 
       for (unsigned int LatencySampleIndex = 0;
            LatencySampleIndex < MyClient.GetLatencySampleCount().Count;
-           ++LatencySampleIndex) {
+           ++LatencySampleIndex)
+      {
         std::string SampleName =
             MyClient.GetLatencySampleName(LatencySampleIndex).Name;
         double SampleValue = MyClient.GetLatencySampleValue(SampleName).Value;
@@ -538,8 +324,9 @@ int main(int argc, char *argv[]) {
       unsigned int SubjectCount = MyClient.GetSubjectCount().SubjectCount;
       // OutputStream << "Subjects (" << SubjectCount << "):" << std::endl;
       for (unsigned int SubjectIndex = 0; SubjectIndex < SubjectCount;
-           ++SubjectIndex) { ////////////////////////////////////////////for
-                             /// loop starts here
+           ++SubjectIndex)
+      { ////////////////////////////////////////////for
+        /// loop starts here
         // OutputStream << "  Subject #" << SubjectIndex << std::endl;
 
         // Get the subject name
@@ -556,8 +343,10 @@ int main(int argc, char *argv[]) {
         //     mocap_msg.at(i).header.id = SubjectName;
         //   }
         // }
-        for (int i = 0; i < argc - 1; i++) {
-          if (SubjectName.compare(objects.at(i)) == 0) {
+        for (int i = 0; i < argc - 1; i++)
+        {
+          if (SubjectName.compare(objects.at(i)) == 0)
+          {
             msg[i].header.description = SubjectName;
           }
         }
@@ -575,7 +364,8 @@ int main(int argc, char *argv[]) {
         // OutputStream << "    Segments (" << SegmentCount << "):" <<
         // std::endl;
         for (unsigned int SegmentIndex = 0; SegmentIndex < SegmentCount;
-             ++SegmentIndex) {
+             ++SegmentIndex)
+        {
           // OutputStream << "      Segment #" << SegmentIndex << std::endl;
 
           // Get the segment name
@@ -597,7 +387,8 @@ int main(int argc, char *argv[]) {
           // OutputStream << "     Children (" << ChildCount << "):" <<
           // std::endl;
           for (unsigned int ChildIndex = 0; ChildIndex < ChildCount;
-               ++ChildIndex) {
+               ++ChildIndex)
+          {
             std::string ChildName =
                 MyClient
                     .GetSegmentChildName(SubjectName, SegmentName, ChildIndex)
@@ -608,7 +399,8 @@ int main(int argc, char *argv[]) {
           // Get the static segment scale
           Output_GetSegmentStaticScale _Output_GetSegmentStaticScale =
               MyClient.GetSegmentStaticScale(SubjectName, SegmentName);
-          if (_Output_GetSegmentStaticScale.Result == Result::Success) {
+          if (_Output_GetSegmentStaticScale.Result == Result::Success)
+          {
             // OutputStream << "        Static Scale: (" <<
             // _Output_GetSegmentStaticScale.Scale[0] << ", " <<
             // _Output_GetSegmentStaticScale.Scale[1]
@@ -720,8 +512,10 @@ int main(int argc, char *argv[]) {
           //         1000.0;
           //   }
           // }
-          for (int i = 0; i < argc - 1; i++) {
-            if (SubjectName.compare(objects.at(i)) == 0) {
+          for (int i = 0; i < argc - 1; i++)
+          {
+            if (SubjectName.compare(objects.at(i)) == 0)
+            {
               msg[i].position.x =
                   (_Output_GetSegmentGlobalTranslation.Translation[0] /
                    1000.0) -
@@ -826,8 +620,10 @@ int main(int argc, char *argv[]) {
           //          Adapt(_Output_GetSegmentGlobalRotationEulerXYZ.Occluded)
           //          << std::endl;
           // publish euler Rotation to DDS in degrees
-          for (int i = 0; i < argc - 1; i++) {
-            if (SubjectName.compare(objects.at(i)) == 0) {
+          for (int i = 0; i < argc - 1; i++)
+          {
+            if (SubjectName.compare(objects.at(i)) == 0)
+            {
               msg[i].orientation.roll =
                   _Output_GetSegmentGlobalRotationEulerXYZ.Rotation[0] *
                   (180.0 / M_PI);
@@ -931,13 +727,16 @@ int main(int argc, char *argv[]) {
         // Get the quality of the subject (object) if supported
         Output_GetObjectQuality _Output_GetObjectQuality =
             MyClient.GetObjectQuality(SubjectName);
-        if (_Output_GetObjectQuality.Result == Result::Success) {
+        if (_Output_GetObjectQuality.Result == Result::Success)
+        {
           double Quality = _Output_GetObjectQuality.Quality;
           // OutputStream << "    Quality: " << Quality << std::endl;
         }
 
-        for (int i = 0; i < argc - 1; i++) {
-          if (SubjectName.compare(objects.at(i)) == 0) {
+        for (int i = 0; i < argc - 1; i++)
+        {
+          if (SubjectName.compare(objects.at(i)) == 0)
+          {
             // std::cout << msg[i].position.x << "\t" << msg[i].position.y <<
             // "\t"
             //           << msg[i].position.z << std::endl;
