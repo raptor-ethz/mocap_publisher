@@ -63,6 +63,24 @@
         "locale": "cpp",
         "queue": "cpp",
         "stack": "cpp",
-        "random": "cpp"
+        "random": "cpp",
+        "csignal": "cpp",
+        "cstdarg": "cpp",
+        "any": "cpp",
+        "strstream": "cpp",
+        "compare": "cpp",
+        "complex": "cpp",
+        "concepts": "cpp",
+        "coroutine": "cpp",
+        "numeric": "cpp",
+        "source_location": "cpp",
+        "future": "cpp",
+        "numbers": "cpp",
+        "semaphore": "cpp",
+        "stop_token": "cpp",
+        "cfenv": "cpp",
+        "cinttypes": "cpp",
+        "typeindex": "cpp",
+        "variant": "cpp"
     }
 }
