@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
     topics.at(i - 1) =
         "mocap_" + objects.at(i - 1); // first argument is the command
     marker_topics.at(i - 1) =
-        "segments_" + objects.at(i - 1); // first argument is the command
+        "markers_" + objects.at(i - 1); // first argument is the command
   }
   // Print objects and topics (INFO)
   std::cout << "publishing the following objecst and topics:" << std::endl;
