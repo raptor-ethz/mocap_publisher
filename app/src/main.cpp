@@ -360,10 +360,14 @@ int main(int argc, char *argv[])
               (180.0 / M_PI);
 
           /* GLOBAL OBJECT ORIENTATION [QUATERNIONS] (not supported as of now)*/
-          // Output_GetSegmentGlobalRotationQuaternion
-          //     _Output_GetSegmentGlobalRotationQuaternion =
-          //         MyClient.GetSegmentGlobalRotationQuaternion(SubjectName,
-          //                                                     SegmentName);
+          Output_GetSegmentGlobalRotationQuaternion
+              _Output_GetSegmentGlobalRotationQuaternion =
+                  MyClient.GetSegmentGlobalRotationQuaternion(SubjectName,
+                                                              SegmentName);
+          msg[pub_index].quaternion.w = _Output_GetSegmentGlobalRotationQuaternion.Rotation[0];
+          msg[pub_index].quaternion.x = _Output_GetSegmentGlobalRotationQuaternion.Rotation[1];
+          msg[pub_index].quaternion.y = _Output_GetSegmentGlobalRotationQuaternion.Rotation[2];
+          msg[pub_index].quaternion.z = _Output_GetSegmentGlobalRotationQuaternion.Rotation[3];
         }
 
         /* COUNT ALL MARKERS AND LOOP OVER THEM */
