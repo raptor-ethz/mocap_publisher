@@ -9,11 +9,16 @@
 #include <string>
 #include <vector>
 
-#include "DataStreamClient.h"
-#include "Mocap_msg.h"
-#include "Mocap_msgPubSubTypes.h"
+// FastDDS participants
 #include "domain_participant.h"
 #include "publisher.h"
+
+// Message Types
+#include "Mocap_msg.h"
+#include "Mocap_msgPubSubTypes.h"
+
+// Vicon Datastream
+#include "DataStreamClient.h"
 
 // vicon helper functions
 #include "vicon_helper.h"
