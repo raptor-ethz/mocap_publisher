@@ -33,9 +33,9 @@ int main(int argc, char *argv[])
   std::vector<std::string> topics = {"empty0", "empty1", "empty2", "empty3",
                                      "empty4", "empty5", "empty6", "empty7",
                                      "empty8", "empty9"};
-  std::vector<std::string> segment_topics = {"SegmentsEmpty0", "SegmentsEmpty1", "SegmentsEmpty2", "SegmentsEmpty3",
-                                             "SegmentsEmpty4", "SegmentsEmpty5", "SegmentsEmpty6", "SegmentsEmpty7",
-                                             "SegmentsEmpty8", "SegmentsEmpty9"};
+  std::vector<std::string> marker_topics = {"MarkerEmpty0", "MarkerEmpty1", "MarkerEmpty2", "MarkerEmpty3",
+                                            "MarkerEmpty4", "MarkerEmpty5", "MarkerEmpty6", "MarkerEmpty7",
+                                            "MarkerEmpty8", "MarkerEmpty9"};
 
   // load names from argument list
   for (int i = 1; i < argc; i++)
@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
     objects.at(i - 1) = argv[i]; // first argument is the command
     topics.at(i - 1) =
         "mocap_" + objects.at(i - 1); // first argument is the command
-    segment_topics.at(i - 1) =
+    marker_topics.at(i - 1) =
         "segments_" + objects.at(i - 1); // first argument is the command
   }
   // Print objects and topics (INFO)
@@ -55,7 +55,7 @@ int main(int argc, char *argv[])
   }
   for (int i = 0; i < argc - 1; i++)
   {
-    std::cout << "object_segment: \t" << objects.at(i) << "\t topic: \t" << segment_topics.at(i)
+    std::cout << "object marker: \t" << objects.at(i) << "\t topic: \t" << marker_topics.at(i)
               << std::endl;
   }
 
@@ -83,34 +83,34 @@ int main(int argc, char *argv[])
   // create mocap messages
   cpp_msg::Mocap_msg msg[10]{};
 
-  // create segment data publishers
-  DDSPublisher segment_pub[10] = {DDSPublisher(idl_msg::MocapSegments_msgPubSubType(),
-                                               segment_topics.at(0), dp.participant()),
-                                  DDSPublisher(idl_msg::MocapSegments_msgPubSubType(),
-                                               segment_topics.at(1), dp.participant()),
-                                  DDSPublisher(idl_msg::MocapSegments_msgPubSubType(),
-                                               segment_topics.at(2), dp.participant()),
-                                  DDSPublisher(idl_msg::MocapSegments_msgPubSubType(),
-                                               segment_topics.at(3), dp.participant()),
-                                  DDSPublisher(idl_msg::MocapSegments_msgPubSubType(),
-                                               segment_topics.at(4), dp.participant()),
-                                  DDSPublisher(idl_msg::MocapSegments_msgPubSubType(),
-                                               segment_topics.at(5), dp.participant()),
-                                  DDSPublisher(idl_msg::MocapSegments_msgPubSubType(),
-                                               segment_topics.at(6), dp.participant()),
-                                  DDSPublisher(idl_msg::MocapSegments_msgPubSubType(),
-                                               segment_topics.at(7), dp.participant()),
-                                  DDSPublisher(idl_msg::MocapSegments_msgPubSubType(),
-                                               segment_topics.at(8), dp.participant()),
-                                  DDSPublisher(idl_msg::MocapSegments_msgPubSubType(),
-                                               segment_topics.at(9), dp.participant())};
+  // create marker data publishers
+  DDSPublisher marker_pub[10] = {DDSPublisher(idl_msg::MocapMarker_msgPubSubType(),
+                                              marker_topics.at(0), dp.participant()),
+                                 DDSPublisher(idl_msg::MocapMarker_msgPubSubType(),
+                                              marker_topics.at(1), dp.participant()),
+                                 DDSPublisher(idl_msg::MocapMarker_msgPubSubType(),
+                                              marker_topics.at(2), dp.participant()),
+                                 DDSPublisher(idl_msg::MocapMarker_msgPubSubType(),
+                                              marker_topics.at(3), dp.participant()),
+                                 DDSPublisher(idl_msg::MocapMarker_msgPubSubType(),
+                                              marker_topics.at(4), dp.participant()),
+                                 DDSPublisher(idl_msg::MocapMarker_msgPubSubType(),
+                                              marker_topics.at(5), dp.participant()),
+                                 DDSPublisher(idl_msg::MocapMarker_msgPubSubType(),
+                                              marker_topics.at(6), dp.participant()),
+                                 DDSPublisher(idl_msg::MocapMarker_msgPubSubType(),
+                                              marker_topics.at(7), dp.participant()),
+                                 DDSPublisher(idl_msg::MocapMarker_msgPubSubType(),
+                                              marker_topics.at(8), dp.participant()),
+                                 DDSPublisher(idl_msg::MocapMarker_msgPubSubType(),
+                                              marker_topics.at(9), dp.participant())};
   // create segment messages
-  cpp_msg::MocapSegments_msg segment_msg[10]{};
+  cpp_msg::MocapMarker_msg marker_msg[10]{};
 
   // assign topic names to messages
   for (int i = 0; i < argc - 1; i++)
   {
-    segment_msg[i].object_name = objects.at(i);
+    marker_msg[i].object_name = objects.at(i);
   }
 
   /* VICON Datastream Settings */
@@ -308,7 +308,7 @@ int main(int argc, char *argv[])
           }
         }
         msg[pub_index].header.description = SubjectName;
-        segment_msg[pub_index].object_name = SubjectName;
+        marker_msg[pub_index].object_name = SubjectName;
 
         /* COUNT ALL SEGMENTS AND LOOP OVER THEM (i think there is usually only one segment) */
         unsigned int SegmentCount = MyClient.GetSegmentCount(SubjectName).SegmentCount;
@@ -339,6 +339,10 @@ int main(int argc, char *argv[])
           msg[pub_index].position.z =
               _Output_GetSegmentGlobalTranslation.Translation[2] / 1000.0;
 
+          /* SET OCCLUDED PARAMETER */
+
+          msg[pub_index].occluded = _Output_GetSegmentGlobalTranslation.Occluded;
+
           /* GLOBAL OBJECT ORIENTATION [EULER ANGLES] */
           Output_GetSegmentGlobalRotationEulerXYZ
               _Output_GetSegmentGlobalRotationEulerXYZ =
@@ -364,7 +368,7 @@ int main(int argc, char *argv[])
 
         /* COUNT ALL MARKERS AND LOOP OVER THEM */
         unsigned int MarkerCount = MyClient.GetMarkerCount(SubjectName).MarkerCount;
-        segment_msg[pub_index].length = MarkerCount;
+        marker_msg[pub_index].length = MarkerCount;
         // check if markers count is too high for message type
         if (MarkerCount > 10)
         {
@@ -378,13 +382,16 @@ int main(int argc, char *argv[])
 
           /* GLOBAL MARKER TRANSLATION */
           Output_GetMarkerGlobalTranslation _Output_GetMarkerGlobalTranslation = MyClient.GetMarkerGlobalTranslation(SubjectName, MarkerName);
-          segment_msg[pub_index].segment_x[MarkerIndex] = _Output_GetMarkerGlobalTranslation.Translation[0];
-          segment_msg[pub_index].segment_x[MarkerIndex] = _Output_GetMarkerGlobalTranslation.Translation[1];
-          segment_msg[pub_index].segment_x[MarkerIndex] = _Output_GetMarkerGlobalTranslation.Translation[2];
+          marker_msg[pub_index].marker_x[MarkerIndex] = _Output_GetMarkerGlobalTranslation.Translation[0];
+          marker_msg[pub_index].marker_y[MarkerIndex] = _Output_GetMarkerGlobalTranslation.Translation[1];
+          marker_msg[pub_index].marker_z[MarkerIndex] = _Output_GetMarkerGlobalTranslation.Translation[2];
+
+          /* CHECK IF OCCLUDED */
+          marker_msg[pub_index].occluded[MarkerIndex] = _Output_GetMarkerGlobalTranslation.Occluded;
         }
         /* PUBLISH MESSAGES */
         pub[pub_index].publish(msg[pub_index]);
-        // segment_pub[i].publish(segment_msg[i]);
+        // segment_pub[i].publish(marker_msg[i]);
       }
     }
 
@@ -400,9 +407,9 @@ int main(int argc, char *argv[])
           }
           if (SegmentIndex < 10)
           {
-            segment_msg[pub_index].segment_x[SegmentIndex] = _Output_GetSegmentGlobalTranslation.Translation[1];
-            segment_msg[pub_index].segment_y[SegmentIndex] = _Output_GetSegmentGlobalTranslation.Translation[2];
-            segment_msg[pub_index].segment_z[SegmentIndex] = _Output_GetSegmentGlobalTranslation.Translation[3];
+            marker_msg[pub_index].segment_x[SegmentIndex] = _Output_GetSegmentGlobalTranslation.Translation[1];
+            marker_msg[pub_index].segment_y[SegmentIndex] = _Output_GetSegmentGlobalTranslation.Translation[2];
+            marker_msg[pub_index].segment_z[SegmentIndex] = _Output_GetSegmentGlobalTranslation.Translation[3];
           }
 
 

@@ -16,8 +16,8 @@
 // Message Types
 #include "Mocap_msg.h"
 #include "Mocap_msgPubSubTypes.h"
-#include "MocapSegments_msg.h"
-#include "MocapSegments_msgPubSubTypes.h"
+#include "MocapMarker_msg.h"
+#include "MocapMarker_msgPubSubTypes.h"
 
 // Vicon Datastream
 #include "DataStreamClient.h"
