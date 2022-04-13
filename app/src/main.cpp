@@ -359,7 +359,7 @@ int main(int argc, char *argv[])
               _Output_GetSegmentGlobalRotationEulerXYZ.Rotation[2] *
               (180.0 / M_PI);
 
-          /* GLOBAL OBJECT ORIENTATION [QUATERNIONS] (not supported as of now)*/
+          /* GLOBAL OBJECT ORIENTATION [QUATERNIONS]*/
           Output_GetSegmentGlobalRotationQuaternion
               _Output_GetSegmentGlobalRotationQuaternion =
                   MyClient.GetSegmentGlobalRotationQuaternion(SubjectName,
