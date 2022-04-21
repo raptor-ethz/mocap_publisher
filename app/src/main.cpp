@@ -201,6 +201,7 @@ int main(int argc, char *argv[])
     std::cout << std::endl;
     // Enable some different data types
     DirectClient.EnableSegmentData();
+    DirectClient.EnableMarkerData(); // enable marker position pub.
 
     DirectClient.SetStreamMode(ViconDataStreamSDK::CPP::StreamMode::ServerPush);
     // }
@@ -339,6 +340,8 @@ int main(int argc, char *argv[])
           msg[pub_index].position.z =
               _Output_GetSegmentGlobalTranslation.Translation[2] / 1000.0;
 
+          // std::cout << pub_index << "\t" << SegmentName << "\t x: \t" << _Output_GetSegmentGlobalTranslation.Translation[0] << "\t y: \t" << _Output_GetSegmentGlobalTranslation.Translation[1] << "\t z: \t" << _Output_GetSegmentGlobalTranslation.Translation[2] << std::endl;
+
           /* SET OCCLUDED PARAMETER */
 
           msg[pub_index].occluded = _Output_GetSegmentGlobalTranslation.Occluded;
@@ -390,12 +393,14 @@ int main(int argc, char *argv[])
           marker_msg[pub_index].marker_y[MarkerIndex] = _Output_GetMarkerGlobalTranslation.Translation[1];
           marker_msg[pub_index].marker_z[MarkerIndex] = _Output_GetMarkerGlobalTranslation.Translation[2];
 
+          /* DEBUG MESSAGE */
+          // std::cout << MarkerName << "\t x: \t" << _Output_GetMarkerGlobalTranslation.Translation[0] << "\t y: \t" << _Output_GetMarkerGlobalTranslation.Translation[1] << "\t z: \t" << _Output_GetMarkerGlobalTranslation.Translation[2] << std::endl;
           /* CHECK IF OCCLUDED */
           marker_msg[pub_index].occluded[MarkerIndex] = _Output_GetMarkerGlobalTranslation.Occluded;
         }
         /* PUBLISH MESSAGES */
         pub[pub_index].publish(msg[pub_index]);
-        // segment_pub[i].publish(marker_msg[i]);
+        marker_pub[pub_index].publish(marker_msg[pub_index]);
       }
     }
 
